@@ -1,1 +1,91 @@
+day_num = 0
+import csv
 
+def main():
+    #this is the main game loop, yes?
+    #so maybe it would start with a function like run_intro.
+    #I should put an extra function to run on day 1, basically to play the intro and take care of setting names and stuff
+    if day_num == 0:
+        initialize()
+    run_intro()
+    #for the sake of clarity, I think run_intro should only take care of the new day and status report messages.
+    #the camp choices can go to another function.
+    run_camp()
+
+def initialize():
+    #add some fancy stuff here later. Print title and intro story.
+    #allow player to pick name
+    player_name=input("What is your name?")
+    filename=f"{player_name}.csv"
+    print(f"Welcome to Cat's Cradle Coven, {player_name}! Are you ready to start on a new adventure?")
+    print("But before you start your coven, we need to know what sort of leader you'll be.")
+    print("Some cats excel at the art of the hunt, while others have an excellent intuition for dealing with herbs."
+            "Do you disperse enemies through shows of strength, or charm them with a silver tongue?"
+            "The possibilities are endless.")
+    while True:
+        player_type=input("What skill do you specialize in? Please type the number of your choice - 1.Hunting 2.Gathering 3.Fighting 4.Charm")
+        if player_type == 1:
+            hunt = 5
+            herb = 2
+            fight = 2
+            talk = 2
+        elif player_type == 2:
+            hunt = 2
+            herb = 5
+            fight = 2
+            talk = 2
+        elif player_type == 3:
+            hunt = 2
+            herb = 2
+            fight = 5
+            talk = 2
+        elif player_type == 4:
+            hunt = 2
+            herb = 2
+            fight = 2
+            talk = 5
+        else:
+            print("Sorry, that was not a valid response. Please type 1, 2, 3, or 4.")
+            continue
+    #create a csv file that will act as a save point using the player's name as a naming convention.
+    with open(filename, 'w', newline='') as file:
+        csv_writer=csv.writer(file)
+        csv_writer.writerow([player_name, hunt, herb, fight, talk])
+    #if there is already a file, load that instead.
+    #Add the player's name and their starter stats, then first companion's name/stats
+
+def run_intro():
+    #mb this could run the introduction scene
+    #and then after that it would start every day with "it's a new day! Status report:(declare if a cat is injured or an event is running)"
+    print("It's a new day!")
+    print("Status Report:")
+    #for each cat in companion_list:
+    #if is_injured = True:
+    #print("{cat_name} is injured!")
+    #else:
+    #print("{cat_name} is ready to go!")
+
+def run_camp():
+    #this covers the player input. It should ask them if they want to send someone exploring, cast a spell, or talk to their companions.
+    has_explored = False
+    print("Do you want to:")
+    print("1. Explore   2. Cast a spell   3. Talk to someone   4. End the day")
+    choice = input("Type the number of your choice:")
+    if choice == 1:
+        if has_explored == True:
+            print("You've already sent someone out to explore today!")
+        else:
+            send_exploring()
+            has_explored = True
+
+def send_exploring():
+    print("Who do you want to send out? The available cats are:")
+    for companion in companion_list:
+        if is_injured == False:
+            print #their name
+        else:
+            pass
+    explore_companion = input("Type the name of the cat you want to send, or type r to return")
+
+if __name__ == "__main__":
+    main()
