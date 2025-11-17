@@ -6,8 +6,8 @@ def main():
     #so maybe it would start with a function like run_intro.
     #I should put an extra function to run on day 1, basically to play the intro and take care of setting names and stuff
     if day_num == 0:
-        player, file = initialize()
-    run_intro()
+        player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list = initialize()
+    run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict)
     #for the sake of clarity, I think run_intro should only take care of the new day and status report messages.
     #the camp choices can go to another function.
     run_camp()
@@ -61,7 +61,6 @@ def initialize():
         csv_writer.writerow(["Name", "Hunting", "Gathering", "Strength", "Charm", "Health", "Friendship"])
         csv_writer.writerow([player_name, hunt, herb, fight, talk, "5", "1"])
         csv_writer.writerow(["Birch", "4", "1", "3", "3", "5", "1"])
-        companion_list = ["Birch"]
 
     #then make a dictionary for player and Birch, for easy access
     player_dict = {
@@ -81,15 +80,53 @@ def initialize():
         "Health": 5,
         "Friendship": 1
     }
+    #gonna make dicts for the other cats too, for later use
+    marlowe_dict = {
+        "Name": "Marlowe",
+        "Hunting": 6,
+        "Gathering": 11,
+        "Strength": 6,
+        "Charm": 2,
+        "Health": 10,
+        "Friendship": 1
+    }
+    pixie_dict = {
+        "Name": "Pixie",
+        "Hunting": 7,
+        "Gathering": 4,
+        "Strength": 7,
+        "Charm": 19,
+        "Health": 15,
+        "Friendship": 1
+    }
+    stellaluna_dict = {
+        "Name": "Stella-Luna",
+        "Hunting": 6,
+        "Gathering": 7,
+        "Strength": 27,
+        "Charm": 7,
+        "Health": 20,
+        "Friendship": 1
+    }
+    elwood_dict = {
+        "Name": "Elwood",
+        "Hunting": 40,
+        "Gathering": 40,
+        "Strength": 40,
+        "Charm": 40,
+        "Health": 30,
+        "Friendship": 1
+    }
 
-    return player_name, filename
+    companion_list = [birch_dict]
+
+    return player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list
     
     
     
 
-def run_intro():
-    #mb this could run the introduction scene
-    #and then after that it would start every day with "it's a new day! Status report:(declare if a cat is injured or an event is running)"
+def run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict):
+    #this runs the status report at the beginning of every day.
     print("It's a new day!")
     print("Status Report:")
     #for each cat in companion_list:
@@ -98,10 +135,11 @@ def run_intro():
     #else:
     #print("{cat_name} is ready to go!")
     for cat in companion_list:
-        if is_injured == True:
-            print("{cat_name} is injured!")
+        cat_name = cat.get("Name")
+        if cat.get("Health") <=0:
+            print(f"{cat_name} is injured!")
         else:
-            print("{cat_name} is ready to go!")
+            print(f"{cat_name} is ready to go!")
 
 def run_camp():
     #this covers the player input. It should ask them if they want to send someone exploring, cast a spell, or talk to their companions.
