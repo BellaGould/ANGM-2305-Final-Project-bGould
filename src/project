@@ -1,16 +1,17 @@
 day_num = 0
 import csv
+import random
 
 def main():
     #this is the main game loop, yes?
     #so maybe it would start with a function like run_intro.
     #I should put an extra function to run on day 1, basically to play the intro and take care of setting names and stuff
     if day_num == 0:
-        player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list = initialize()
-    run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict)
+        player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict = initialize()
+    run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, inventory_dict)
     #for the sake of clarity, I think run_intro should only take care of the new day and status report messages.
     #the camp choices can go to another function.
-    run_camp()
+    run_camp(companion_list, inventory_dict)
 
 def initialize():
     #add some fancy stuff here later. Print title and intro story.
@@ -117,15 +118,17 @@ def initialize():
         "Health": 30,
         "Friendship": 1
     }
+    inventory_dict = {
+        "Herbs": 0,
+        "Food": 0
+    }
 
     companion_list = [birch_dict]
 
-    return player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list
-    
-    
-    
+    return player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
+       
 
-def run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict):
+def run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, inventory_dict):
     #this runs the status report at the beginning of every day.
     print("It's a new day!")
     print("Status Report:")
@@ -134,6 +137,9 @@ def run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_d
     #print("{cat_name} is injured!")
     #else:
     #print("{cat_name} is ready to go!")
+    herb = inventory_dict.get("Herbs")
+    food = inventory_dict.get("Food")
+    print(f"You have {herb} herbs and {food} food.")
     for cat in companion_list:
         cat_name = cat.get("Name")
         if cat.get("Health") <=0:
@@ -141,35 +147,123 @@ def run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_d
         else:
             print(f"{cat_name} is ready to go!")
 
-def run_camp():
+def run_camp(companion_list, inventory_dict):
     #this covers the player input. It should ask them if they want to send someone exploring, cast a spell, or talk to their companions.
+    #also mb I should add a debug function for easy testing?
     has_explored = False
     has_cast_spell = False
+    has_talked = False
     while True:
         print("Do you want to:")
         print("1. Explore   2. Cast a spell   3. Talk to someone   4. End the day")
         choice = input("Type the number of your choice:")
-        if choice == 1:
+        if choice == '1':
             if has_explored == True:
                 print("You've already sent someone out to explore today!")
             else:
-                send_exploring()
+                send_exploring(companion_list, inventory_dict)
                 has_explored = True
-        if choice == 2:
+        elif choice == '2':
             if has_cast_spell == True:
-                print("You've already sent someone out to explore today!")
+                print("You can't cast two spells on the same day.")
             else:
-                send_exploring()
+                cast_spell(companion_list, inventory_dict)
                 has_cast_spell = True
+        elif choice == '3':
+            if has_talked == True:
+                print("Your coven is busy...")
+            else:
+                #add talking stuff here
+                pass
+        elif choice == '4':
+            return
 
-def send_exploring():
-    print("Who do you want to send out? The available cats are:")
-    for companion in companion_list:
-        if is_injured == False:
-            print #their name
+def send_exploring(companion_list, inventory_dict):
+    exploring_list = []
+    exploring = True
+    while exploring == True:
+        print("Who do you want to send out? The available cats are:")
+        for cat in companion_list:
+            cat_name = cat.get("Name")
+            if cat.get("Health") > 0:
+                print (f"{cat_name}")
+                exploring_list.append({cat_name})
+            else:
+                pass
+        explore_companion = input("Type the name of the cat you want to send, or type r to return")
+        if explore_companion in exploring_list:
+            food_gained, herb_gained = calculate_explore(explore_companion)
+            print(f"{explore_companion} obtained {food_gained} food and {herb_gained} herbs!")
+            inventory_dict["Food"] = (inventory_dict.get("Food") + {food_gained})
+            inventory_dict["Herbs"] = (inventory_dict.get("Herbs") + {herb_gained})
+        elif explore_companion == "r":
+            exploring = False
         else:
-            pass
-    explore_companion = input("Type the name of the cat you want to send, or type r to return")
+            print()
+
+def calculate_explore(explore_companion):
+    explore_dict = "{explore_companion.lower}_dict"
+    companion_hunt = explore_dict.get("Hunting")
+    companion_gather = explore_dict.get("Gathering")
+    explore_dict["Health"] = (explore_dict.get("Health") - 1)
+
+    hunt_num = min((random.randrange(0, 51))+{companion_hunt}, 60)
+    if 0 <= hunt_num <= 10:
+        food_caught = 1
+    elif 11<= hunt_num <= 20:
+        food_caught = 2
+    elif 21<= hunt_num <= 30:
+        food_caught = 4
+    elif 31<= hunt_num <= 40:
+        food_caught = 6
+    elif 41<= hunt_num <= 50:
+        food_caught = 9
+    elif 51<= hunt_num <= 60:
+        food_caught = 12
+
+    herb_num = min((random.randrange(0, 51))+{companion_gather}, 60)
+    if 0 <= herb_num <= 10:
+        herb_gathered = 1
+    elif 11<= herb_num <= 20:
+        herb_gathered = 2
+    elif 21<= herb_num <= 30:
+        herb_gathered = 4
+    elif 31<= herb_num <= 40:
+        herb_gathered = 6
+    elif 41<= herb_num <= 50:
+        herb_gathered = 9
+    elif 51<= herb_num <= 60:
+        herb_gathered = 12
+    
+    return food_caught, herb_gathered
+
+def cast_spell(companion_list, inventory_dict):
+    casting = True
+    while casting == True:
+        print("What sort of spell would you like to cast today? 1. Health 2. Hunting 3. Gathering 4. Strength 5. Charm ")
+        spell_type = input("Please type the number of your choice, or r to return.")
+        if spell_type == "r":
+            casting == False
+        if spell_type == 1:
+            print("Which healing spell would you like to cast?")
+            print("1. Basic healing spell | Cost: 3 Herbs")
+            print("2. Intermediate healing spell | Cost: 5 Herbs")
+            print("3. Advanced healing spell | Cost: 10 Herbs")
+            healing_type = input("Please type the number of your choice, or r to return.")
+            if healing_type == 'r':
+                casting = False
+            elif healing_type == 1:
+                if inventory_dict.get("Herbs") < 3:
+                    print("You don't have enough herbs to cast that spell!")
+                else:
+                    print("Who do you want to cast this spell on? Available recipients are:")
+                    for cat in companion_list:
+                        cat_name = cat.get("Name")
+                        cat_health = cat.get("Health")
+                        print (f"{cat_name} - Health: {cat_health}")
+            
+
+        
 
 if __name__ == "__main__":
     main()
