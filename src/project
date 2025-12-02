@@ -176,7 +176,8 @@ def run_camp(companion_list, inventory_dict):
                 #add talking stuff here
                 pass
         elif choice == '4':
-            return
+            #mb put the random event here?
+            pick_random_event(companion_list, inventory_dict)
 
 def send_exploring(companion_list, inventory_dict):
     exploring_list = []
@@ -261,6 +262,9 @@ def cast_spell(companion_list, inventory_dict):
                         cat_name = cat.get("Name")
                         cat_health = cat.get("Health")
                         print (f"{cat_name} - Health: {cat_health}")
+
+def pick_random_event(companion_list, inventory_dict):
+    #range max = 1+ the number of items on companion list times ten.
             
 
         
