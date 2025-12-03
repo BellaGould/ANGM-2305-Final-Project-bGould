@@ -16,17 +16,17 @@ def main():
 def initialize():
     #add some fancy stuff here later. Print title and intro story.
     #allow player to pick name
-    player_name=input("What is your name?")
+    player_name=input("What is your name? ")
     filename=f"{player_name}.csv"
-    print(f"Welcome to Cat's Cradle Coven, {player_name}! Are you ready to start on a new adventure?")
-    print("But before you start your coven, we need to know what sort of leader you'll be.")
+    print(f"Welcome to Cat's Cradle Coven, {player_name}! Are you ready to start on a new adventure?\n")
+    print("But before you start your coven, we need to know what sort of leader you'll be.\n")
     #notes: this appears sloppy in the terminal. fix this text later.
-    print("Some cats excel at the art of the hunt, while others have an excellent intuition for dealing with herbs."
-            "Do you disperse enemies through shows of strength, or charm them with a silver tongue?"
-            "The possibilities are endless.")
+    print("Some cats excel at the art of the hunt, while others have an excellent intuition for dealing with herbs. "
+            "Do you disperse enemies through shows of strength, or charm them with a silver tongue? "
+            "The possibilities are endless.\n")
     skill_unpicked=True
     while skill_unpicked==True:
-        player_type=input("What skill do you specialize in? Please type the number of your choice - 1.Hunting 2.Gathering 3.Strength 4.Charm")
+        player_type=input("What skill do you specialize in? Please type the number of your choice - 1.Hunting 2.Gathering 3.Strength 4.Charm ")
         if player_type == "1":
             hunt = 5
             herb = 2
@@ -188,27 +188,32 @@ def send_exploring(companion_list, inventory_dict):
             cat_name = cat.get("Name")
             if cat.get("Health") > 0:
                 print (f"{cat_name}")
-                exploring_list.append({cat_name})
+                exploring_list.append(cat_name)
             else:
                 pass
-        explore_companion = input("Type the name of the cat you want to send, or type r to return")
+        explore_companion = input("Type the name of the cat you want to send, or type r to return. ")
         if explore_companion in exploring_list:
-            food_gained, herb_gained = calculate_explore(explore_companion)
-            print(f"{explore_companion} obtained {food_gained} food and {herb_gained} herbs!")
-            inventory_dict["Food"] = (inventory_dict.get("Food") + {food_gained})
-            inventory_dict["Herbs"] = (inventory_dict.get("Herbs") + {herb_gained})
+            food_gained, herb_gained = calculate_explore(explore_companion, companion_list)
+            print(f"{explore_companion} obtained {food_gained} food and {herb_gained} herbs!\n")
+            inventory_dict["Food"] = (inventory_dict.get("Food") + food_gained)
+            inventory_dict["Herbs"] = (inventory_dict.get("Herbs") + herb_gained)
+            exploring = False
+            return
         elif explore_companion == "r":
             exploring = False
+            return
         else:
             print()
 
-def calculate_explore(explore_companion):
-    explore_dict = "{explore_companion.lower}_dict"
+def calculate_explore(explore_companion, companion_list):
+    if explore_companion == 'Birch':
+        explore_dict = companion_list[0]
     companion_hunt = explore_dict.get("Hunting")
     companion_gather = explore_dict.get("Gathering")
     explore_dict["Health"] = (explore_dict.get("Health") - 1)
 
-    hunt_num = min((random.randrange(0, 51))+{companion_hunt}, 60)
+    hunt_rng = random.randrange(0, 51)
+    hunt_num = min(hunt_rng+companion_hunt, 60)
     if 0 <= hunt_num <= 10:
         food_caught = 1
     elif 11<= hunt_num <= 20:
@@ -222,7 +227,8 @@ def calculate_explore(explore_companion):
     elif 51<= hunt_num <= 60:
         food_caught = 12
 
-    herb_num = min((random.randrange(0, 51))+{companion_gather}, 60)
+    herb_rng = random.randrange(0, 51)
+    herb_num = min(herb_rng+companion_gather, 60)
     if 0 <= herb_num <= 10:
         herb_gathered = 1
     elif 11<= herb_num <= 20:
@@ -245,26 +251,28 @@ def cast_spell(companion_list, inventory_dict):
         spell_type = input("Please type the number of your choice, or r to return.")
         if spell_type == "r":
             casting == False
-        if spell_type == 1:
-            print("Which healing spell would you like to cast?")
-            print("1. Basic healing spell | Cost: 3 Herbs")
-            print("2. Intermediate healing spell | Cost: 5 Herbs")
-            print("3. Advanced healing spell | Cost: 10 Herbs")
+            return
+        if spell_type == '1':
+            print("Which healing spell would you like to cast?\n")
+            print("1. Basic healing spell | Cost: 3 Herbs\n")
+            print("2. Intermediate healing spell | Cost: 5 Herbs\n")
+            print("3. Advanced healing spell | Cost: 10 Herbs\n")
             healing_type = input("Please type the number of your choice, or r to return.")
             if healing_type == 'r':
                 casting = False
-            elif healing_type == 1:
+            elif healing_type == '1':
                 if inventory_dict.get("Herbs") < 3:
-                    print("You don't have enough herbs to cast that spell!")
+                    print("You don't have enough herbs to cast that spell!\n")
                 else:
-                    print("Who do you want to cast this spell on? Available recipients are:")
+                    print("Who do you want to cast this spell on? Available recipients are:\n")
                     for cat in companion_list:
                         cat_name = cat.get("Name")
                         cat_health = cat.get("Health")
-                        print (f"{cat_name} - Health: {cat_health}")
+                        print (f"{cat_name} - Health: {cat_health}\n")
 
 def pick_random_event(companion_list, inventory_dict):
     #range max = 1+ the number of items on companion list times ten.
+    pass
             
 
         
