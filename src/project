@@ -178,6 +178,8 @@ def run_camp(companion_list, inventory_dict):
         elif choice == '4':
             #mb put the random event here?
             pick_random_event(companion_list, inventory_dict)
+        elif choice == 'debug':
+            open_debug_menu(companion_list, inventory_dict)
 
 def send_exploring(companion_list, inventory_dict):
     exploring_list = []
@@ -269,10 +271,26 @@ def cast_spell(companion_list, inventory_dict):
                         cat_name = cat.get("Name")
                         cat_health = cat.get("Health")
                         print (f"{cat_name} - Health: {cat_health}\n")
+                        spell_target = input("Please type the name of your choice. ").lower
+                        target_dict = spell_target + "_dict"
+                        if target_dict in companion_list:
+                            target_dict["Health"] = (target_dict.get("Health") + 2)
 
 def pick_random_event(companion_list, inventory_dict):
     #range max = 1+ the number of items on companion list times ten.
     pass
+
+def open_debug_menu(companion_list, inventory_dict):
+    debug = True
+    while debug == True:
+        debug_command = input("Please input your command or r to return. ")
+        if debug_command == "food":
+            inventory_dict["Food"] = 100
+        elif debug_command == "herb":
+            inventory_dict["Herbs"] = 100
+        elif debug_command == 'r':
+            debug = False
+            return
             
 
         
