@@ -161,14 +161,12 @@ def run_camp(companion_list, inventory_dict):
             if has_explored == True:
                 print("You've already sent someone out to explore today!")
             else:
-                send_exploring(companion_list, inventory_dict)
-                has_explored = True
+                has_explored = send_exploring(companion_list, inventory_dict)
         elif choice == '2':
             if has_cast_spell == True:
                 print("You can't cast two spells on the same day.")
             else:
-                cast_spell(companion_list, inventory_dict)
-                has_cast_spell = True
+                has_cast_spell = cast_spell(companion_list, inventory_dict)
         elif choice == '3':
             if has_talked == True:
                 print("Your coven is busy...")
@@ -178,6 +176,7 @@ def run_camp(companion_list, inventory_dict):
         elif choice == '4':
             #mb put the random event here?
             pick_random_event(companion_list, inventory_dict)
+            run_intro(companion_list, inventory_dict)
         elif choice == 'debug':
             open_debug_menu(companion_list, inventory_dict)
 
@@ -200,10 +199,10 @@ def send_exploring(companion_list, inventory_dict):
             inventory_dict["Food"] = (inventory_dict.get("Food") + food_gained)
             inventory_dict["Herbs"] = (inventory_dict.get("Herbs") + herb_gained)
             exploring = False
-            return
+            return True
         elif explore_companion == "r":
             exploring = False
-            return
+            return False
         else:
             print()
 
@@ -253,28 +252,98 @@ def cast_spell(companion_list, inventory_dict):
         spell_type = input("Please type the number of your choice, or r to return.")
         if spell_type == "r":
             casting == False
-            return
+            return False
         if spell_type == '1':
+            print("Healing spells recover your companions' hit points!")
             print("Which healing spell would you like to cast?\n")
             print("1. Basic healing spell | Cost: 3 Herbs\n")
             print("2. Intermediate healing spell | Cost: 5 Herbs\n")
             print("3. Advanced healing spell | Cost: 10 Herbs\n")
             healing_type = input("Please type the number of your choice, or r to return.")
             if healing_type == 'r':
-                casting = False
+                pass
             elif healing_type == '1':
                 if inventory_dict.get("Herbs") < 3:
                     print("You don't have enough herbs to cast that spell!\n")
                 else:
-                    print("Who do you want to cast this spell on? Available recipients are:\n")
-                    for cat in companion_list:
-                        cat_name = cat.get("Name")
-                        cat_health = cat.get("Health")
-                        print (f"{cat_name} - Health: {cat_health}\n")
-                        spell_target = input("Please type the name of your choice. ").lower
-                        target_dict = spell_target + "_dict"
-                        if target_dict in companion_list:
-                            target_dict["Health"] = (target_dict.get("Health") + 2)
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Health"] = (target_dict.get("Health") + 2)
+                    print(f"{spell_target} has gained 2 health!")
+                    return True
+            elif healing_type == '2':
+                if inventory_dict.get("Herbs") < 5:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Health"] = (target_dict.get("Health") + 4)
+                    print(f"{spell_target} has gained 4 health!")
+                    return True
+            elif healing_type == '3':
+                if inventory_dict.get("Herbs") < 10:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Health"] = (target_dict.get("Health") + 8)
+                    print(f"{spell_target} has gained 8 health!")
+                    return True
+        elif spell_type == '2':
+            print("Hunting spells enhance your companions' abilities so they can catch more prey!")
+            print("Which hunting spell would you like to cast?\n")
+            print("1. Swift Paws | Cost: 5 Herbs\n")
+            print("2. Bird's Eye View | Cost: 8 Herbs\n")
+            print("3. Cloak of Shadows | Cost: 12 Herbs")
+            hunting_type = input("Please type the number of your choice, or r to return.")
+            if hunting_type == 'r':
+                pass
+            elif hunting_type == '1':
+                if inventory_dict.get("Herbs") < 5:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Hunting"] = (target_dict.get("Hunting") + 1)
+                    print(f"{spell_target} has gained 1 Hunting skill!")
+                    return True
+            elif hunting_type == '2':
+                if inventory_dict.get("Herbs") < 8:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Hunting"] = (target_dict.get("Hunting") + 4)
+                    print(f"{spell_target} has gained 4 Hunting skill!")
+                    return True
+            elif hunting_type == '3':
+                if inventory_dict.get("Herbs") < 12:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Hunting"] = (target_dict.get("Hunting") + 6)
+                    print(f"{spell_target} has gained 6 Hunting skill!")
+                    return True
+                    
+                    
+def pick_spell_target(companion_list):
+    casting_list = []
+    print("Who do you want to cast this spell on? Available recipients are:\n")
+    for cat in companion_list:
+        cat_name = cat.get("Name")
+        cat_health = cat.get("Health")
+        print (f"{cat_name} - Health: {cat_health}\n")
+        casting_list.append(cat_name)
+    spell_target = input("Please type the name of your choice. ")
+    if spell_target in casting_list:
+        if spell_target == 'Birch':
+            target_dict = companion_list[0]
+        elif spell_target == 'Marlowe':
+            target_dict = companion_list[1]
+        elif spell_target == 'Pixie':
+            target_dict = companion_list[2]
+        elif spell_target == 'Stellaluna':
+            target_dict = companion_list[3]
+        elif spell_target == 'Elwood':
+            target_dict = companion_list[4]
+        return spell_target, target_dict
+    else:
+        print("Sorry, that's not a valid input. Please type another answer.")
 
 def pick_random_event(companion_list, inventory_dict):
     #range max = 1+ the number of items on companion list times ten.
