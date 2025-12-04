@@ -139,13 +139,13 @@ def run_intro(companion_list, birch_dict, marlowe_dict, pixie_dict, stellaluna_d
     #print("{cat_name} is ready to go!")
     herb = inventory_dict.get("Herbs")
     food = inventory_dict.get("Food")
-    print(f"You have {herb} herbs and {food} food.")
+    print(f"You have {herb} herbs and {food} food.\n")
     for cat in companion_list:
         cat_name = cat.get("Name")
         if cat.get("Health") <=0:
-            print(f"{cat_name} is injured!")
+            print(f"{cat_name} is injured!\n")
         else:
-            print(f"{cat_name} is ready to go!")
+            print(f"{cat_name} is ready to go!\n")
 
 def run_camp(companion_list, inventory_dict):
     #this covers the player input. It should ask them if they want to send someone exploring, cast a spell, or talk to their companions.
@@ -248,7 +248,7 @@ def calculate_explore(explore_companion, companion_list):
 def cast_spell(companion_list, inventory_dict):
     casting = True
     while casting == True:
-        print("What sort of spell would you like to cast today? 1. Health 2. Hunting 3. Gathering 4. Strength 5. Charm ")
+        print("What sort of spell would you like to cast today? 1. Health | 2. Hunting | 3. Gathering | 4. Charm | 5. Strength ")
         spell_type = input("Please type the number of your choice, or r to return.")
         if spell_type == "r":
             casting == False
@@ -351,6 +351,72 @@ def cast_spell(companion_list, inventory_dict):
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Gathering"] = (target_dict.get("Gathering") + 6)
                     print(f"{spell_target} has gained 6 Gathering skill!")
+                    return True
+        elif spell_type == '4':
+            print("Charm spells grant your companions the gift of gab, useful for making allies in the forest!")
+            print("Which charm spell would you like to cast?\n")
+            print("1. Shiny Fur | Cost: 10 Herbs\n")
+            print("2. Silver Tongue | Cost: 14 Herbs\n")
+            print("3. Aura of Benevolence | Cost: 18 Herbs")
+            charm_type = input("Please type the number of your choice, or r to return.")
+            if charm_type == 'r':
+                pass
+            elif charm_type == '1':
+                if inventory_dict.get("Herbs") < 10:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Charm"] = (target_dict.get("Charm") + 1)
+                    print(f"{spell_target} has gained 1 Charm skill!")
+                    return True
+            elif charm_type == '2':
+                if inventory_dict.get("Herbs") < 14:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Charm"] = (target_dict.get("Charm") + 4)
+                    print(f"{spell_target} has gained 4 Charm skill!")
+                    return True
+            elif charm_type == '3':
+                if inventory_dict.get("Herbs") < 18:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Charm"] = (target_dict.get("Charm") + 6)
+                    print(f"{spell_target} has gained 6 Charm skill!")
+                    return True
+        elif spell_type == '5':
+            print("Strength spells allow your companions to deepen their power so they can do more with their magic!")
+            print("Which strength spell would you like to cast?\n")
+            print("1. Inner Spark | Cost: 17 Herbs\n")
+            print("2. Potent Flame | Cost: 21 Herbs\n")
+            print("3. Inferno Soul | Cost: 25 Herbs")
+            strength_type = input("Please type the number of your choice, or r to return.")
+            if strength_type == 'r':
+                pass
+            elif strength_type == '1':
+                if inventory_dict.get("Herbs") < 10:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Strength"] = (target_dict.get("Strength") + 1)
+                    print(f"{spell_target} has gained 1 Strength skill!")
+                    return True
+            elif strength_type == '2':
+                if inventory_dict.get("Herbs") < 14:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Strength"] = (target_dict.get("Strength") + 4)
+                    print(f"{spell_target} has gained 4 Strength skill!")
+                    return True
+            elif strength_type == '3':
+                if inventory_dict.get("Herbs") < 18:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Strength"] = (target_dict.get("Strength") + 6)
+                    print(f"{spell_target} has gained 6 Strength skill!")
                     return True
                     
 def pick_spell_target(companion_list):
