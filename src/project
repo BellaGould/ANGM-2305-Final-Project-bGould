@@ -319,7 +319,39 @@ def cast_spell(companion_list, inventory_dict):
                     target_dict["Hunting"] = (target_dict.get("Hunting") + 6)
                     print(f"{spell_target} has gained 6 Hunting skill!")
                     return True
-                    
+        elif spell_type == '3':
+            print("Gathering spells grant your companions better knoweldge of nature, so they naturally find more herbs.")
+            print ("Which gathering spell would you like to cast?\n")
+            print("1. Gatherer's Intuition | Cost: 7 Herbs\n")
+            print("2. Nature Knack | Cost: 12 Herbs\n")
+            print("3. Terra's Guidance | Cost: 15 Herbs\n")
+            gathering_type = input("Please type the number of your choice, or r to return.")
+            if gathering_type == 'r':
+                pass
+            elif gathering_type == '1':
+                if inventory_dict.get("Herbs") < 7:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Gathering"] = (target_dict.get("Gathering") + 1)
+                    print(f"{spell_target} has gained 1 Gathering skill!")
+                    return True
+            elif gathering_type == '2':
+                if inventory_dict.get("Herbs") < 12:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Gathering"] = (target_dict.get("Gathering") + 4)
+                    print(f"{spell_target} has gained 4 Gathering skill!")
+                    return True
+            elif gathering_type == '3':
+                if inventory_dict.get("Herbs") < 15:
+                    print("You don't have enough herbs to cast that spell!\n")
+                else:
+                    spell_target, target_dict = pick_spell_target(companion_list)
+                    target_dict["Gathering"] = (target_dict.get("Gathering") + 6)
+                    print(f"{spell_target} has gained 6 Gathering skill!")
+                    return True
                     
 def pick_spell_target(companion_list):
     casting_list = []
