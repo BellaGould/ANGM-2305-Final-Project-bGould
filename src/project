@@ -7,7 +7,7 @@ def main():
     #so maybe it would start with a function like run_intro.
     #I should put an extra function to run on day 1, basically to play the intro and take care of setting names and stuff
     if day_num == 0:
-        player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict = initialize()
+        player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict = initialize()
     run_intro(companion_list, inventory_dict)
     #for the sake of clarity, I think run_intro should only take care of the new day and status report messages.
     #the camp choices can go to another function.
@@ -118,7 +118,7 @@ def initialize():
 
     companion_list = [birch_dict]
 
-    return player_name, filename, player_dict, birch_dict, marlowe_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
+    return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
        
 
 def run_intro(companion_list, inventory_dict):
@@ -528,11 +528,62 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
     elif pick_number == 8:
         print("It's been rather rainy the last few days, and the ground is wet and squishy. One morning, you step out of your den to find " \
         "the ground covered in mushrooms of all shapes and sizes! Birch looks a little grossed out.\n")
-        print("Birch: ''")
+        print(f"Birch: 'Ugh, they're everywhere... Careful, {player_name}. Some send out spores if you bump them.'\n")
+        print("They carefully hop over a patch of brown mushrooms with button-like tops, treating them as if they were anthills.\n")
+        print("Birch: 'What should we do with them? I know some of them are used for spells, but... can " \
+        "we really tell them apart?'")
+        while True:
+            print("Indeed, some mushrooms are safe, edible, and even have magic properties. But other types can be hallucinogenic " \
+            "at best, dangerous at worst. Should you (1.) get rid of all the mushrooms or (2.) try to separate the good and bad ones?\n")
+            choice_rndm8 = input("Please type the number of your choice.\n")
+            if choice_rndm8 == '1':
+                print("You spend the day clearing out the mushrooms. Camp looks a lot cleaner now!\n")
+            elif choice_rndm8 == '2':
+                if player_dict.get("Gathering") + birch_dict.get("Gathering") >= 5:
+                    print("You spot a couple of edible mushrooms among the group. No need to waste those! " \
+                    "Using your knowledge of Gathering, you guide Birch on which ones to pick and which to avoid.\n")
+                    print("You have gained 3 Herbs and 3 Food!\n")
+                    inventory_dict["Food"] += 3
+                    inventory_dict["Herbs"] += 3
+                    False
+                else:
+                    print("You don't want to waste the mushrooms, but you and Birch struggle to identify which " \
+                    "ones are which. At one point Birch bites down on a mushroom head only to begin choking on a " \
+                    "burst of spores. You end up getting rid of all the mushrooms, just to be safe.\n")
+                    print("Birch has lost 1 Health.\n")
+                    birch_dict["Health"] -= 1
+                    False
     elif pick_number == 9:
+        print("A strange cat wanders into your camp, muttering to themself. They reek of asphalt and kibble - a housecat, " \
+        "maybe? But what are they doing all the way out here?\n")
+        print("Stranger: 'I'm not lost... I'm not lost, haha. I'll find home any minute now...'\n")
+        print("Their coat is dirty and they look skinny. They must have been out here for a while. You and Birch " \
+        "look at each other and approach them slowly, calling out a greeting. The cat's tail puffs to twice its size.\n")
+        print("Stranger: 'Who... who are you?! Aaaaaaaah, don't eat me! Scary wild cats! Don't eat me! Don't eat me!'\n")
+        print("They begin running around in circles, wailing to themself.")
+        while True:
+            print("They're clearly scared of you. Should you (1.) try to calm them down, or (2.) just leave them be?\n")
+            choice_rndm9 = input("Please type the number of your choice.\n")
+            if choice_rndm9 == '1':
+                if player_dict.get("Charm") + birch_dict.get("Charm") >= 5:
+                    print("With some gentle coaxing, you and Birch talk down the frightened cat and bring them some food. " \
+                    "As you suspect, they're a lost housecat who went into the forest on a whim and hasn't been able to " \
+                    "find their way back out. They seem both embarrassed and grateful for your patience.\n")
+                    print("Once they've recovered, you show them the way out of the forest. Birch seems pleased.\n")
+                    print("Birch: 'It feels good to be able to do something nice for another cat. Supporting others... " \
+                    "that's what covens are for, right?'\n")
+                    print("You have gained 1 Friendship with Birch!")
+                    birch_dict["Friendship"] += 1
+                    False
+                else:
+                    print("Despite your best attempts, the lost cat only gets more and more upset. Suddenly, they lash out at you! " \
+                    "Birch pushes you away at the last second.\n")
+                    print("Birch has lost 2 Health.")
+                    birch_dict["Health"] -= 2
+                    False
     elif pick_number == 10:
         if len(companion_list) != 1:
-            print("It was an uneventful day.")
+            print("It was an uneventful day.\n")
         else:
             recruit_marlowe(companion_list, inventory_dict, player_dict)
     else:
