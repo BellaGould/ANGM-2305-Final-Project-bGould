@@ -83,15 +83,7 @@ def initialize():
         "Friendship": 1
     }
     #gonna make dicts for the other cats too, for later use
-    marlowe_dict = {
-        "Name": "Marlowe",
-        "Hunting": 6,
-        "Gathering": 11,
-        "Strength": 6,
-        "Charm": 2,
-        "Health": 10,
-        "Friendship": 1
-    }
+    
     pixie_dict = {
         "Name": "Pixie",
         "Hunting": 7,
@@ -534,9 +526,15 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
     elif pick_number == 7:
          fox_fight(birch_dict, player_dict, player_name)
     elif pick_number == 8:
+        print("It's been rather rainy the last few days, and the ground is wet and squishy. One morning, you step out of your den to find " \
+        "the ground covered in mushrooms of all shapes and sizes! Birch looks a little grossed out.\n")
+        print("Birch: ''")
     elif pick_number == 9:
     elif pick_number == 10:
-        recruit_marlowe(companion_list, inventory_dict, player_dict)
+        if len(companion_list) != 1:
+            print("It was an uneventful day.")
+        else:
+            recruit_marlowe(companion_list, inventory_dict, player_dict)
     else:
         print("It was an uneventful day.\n")
 
@@ -560,16 +558,78 @@ def fox_fight(birch_dict, player_dict, player_name):
                 print("Birch has lost 2 Health.\n")
                 birch_dict["Health"] = (birch_dict.get("Health") - 2)
             print("You recovered the prey, gaining 2 Food!")
+            False
         elif choice_rndm7 == '2':
             print("You call for Birch to retreat. They hesitate, looking longingly at the prey pile, but follow your lead.\n")
             print("Foxes can easily injure a cat. You shouldn't fight them unless you're confident in your Strength.\n")
+            False
             
-
-
 def recruit_marlowe(companion_list, inventory_dict, player_dict):
     player_name = player_dict.get("Name")
-    #event text here.
-    pass
+    birch_dict = companion_list[0]
+    
+    print("The wind whips around you as you bound through the trees, cringing at the eerie howl in the sky above." \
+    "Maybe you shouldn't have chosen to head out earlier. But the scent of the storm was much fainter then, and you had thought you" \
+    "could beat it. It seems you were wrong.\n")
+    print("Birch runs alongside you. With a flick of their striped tail, they direct you towards a gap in the trees.\n")
+    print("Birch: 'Over here! The underbrush is thinner. We'll be back sooner if we take this shortcut!'\n")
+    print("You follow them through a dry and downtrodden path. You're making good time - until you hear a loud groan that sets your fur on end." \
+    "Birch notices it too, and skids to a stop.\n")
+    print("Birch: 'Stop! It's not safe-'\n")
+    print("They barely finish their sentence before an old tree crashes down on the path with a horrible splintering sound." \
+    "Among the chaos, you hear a feline wail. You rush forward to see if Birch is alright, and they almost crash into you.\n")
+    print("Birch: 'That... wasn't you, was it? It wasn't me either. Is there someone else here? We have to help them!'\n")
+    print("You and Birch approach the tree and find a tiny cat with brown, mousy fur. They're crouched on the ground near the tree," \
+    "their ears back and eyes wide. Looks like it missed them by a whisker.\n")
+    print("Birch is immediately at the stranger's side, nudging them up.")
+    print("Birch: 'Are you hurt? Our camp is just a little while south of here! Come with us, and you'll be safe there!'\n")
+    print("The stranger mutters to themself, still bug-eyed.")
+    print("Stranger: 'No, no, near here, there's...'\n")
+    print("They jump up like they've been struck by lightning.\n")
+    print("Stranger: 'The ostrich fern! Follow the ostrich fern!'\n")
+    print("They bolt into the woods, quick as a flash.\n")
+    input("Press Enter to continue.")
+    #providing a break for the player to read all that text ^
+    print("Birch: 'The ostrich fern...?'\n")
+    if player_dict.get("Gathering") + birch_dict.get("Gathering") >= 12:
+        print("Birch wrinkles their nose in concentration.\n")
+        print("Birch: 'That sounds familliar. I think you mentioned them once? Their fronds are sort of fluffy, like feathers...'\n")
+        print("You look in the direction the strange cat ran off in and notice a vibrant green fern with a grooved stem." \
+        "The ostrich fern! There are more clumps of them in the distance. With your path home cut off and danger imminent," \
+        "you decide to take a chance on the stranger's advice. You and Birch follow the ferns, and eventually come to an enormous" \
+        "bush of them around a small hill. There's a tunnel leading inside the hill, so you and Birch crawl in.\n")
+        print("It's dark inside, but thankfully quiet compared to the roaring outdoors. The tunnel slowly widens out into a" \
+        "small living space. You spot the nervous cat from earlier.\n")
+        print("Stranger: 'You- oh, th-thank goodness. You found it. Are either of you hurt?'\n")
+        print("Birch: 'I think we're both fine. Thank you for leading us here. Is this your home?'\n")
+        print("The stranger nods.\n")
+        print("Stranger: 'I-It is. I leave the ferns as a reminder for myself... And they're a sign of good soil, so I figure they're" \
+        "good luck anyway... Oh, where are my manners? M-my name is Marlowe.'\n")
+        print("You all make your introductions, and to your surprise, you learn Marlowe is a witch cat too! They have a deep interest" \
+        "in herbs, and grow their own garden on the other side of the hill. You ask if they'd be interested in joining" \
+        "your coven. Marlowe seems delighted, in their own shy way.\n")
+        print("Marlowe: 'A-are you sure? Oh, I'd love to!'\n")
+        marlowe_dict = {
+        "Name": "Marlowe",
+        "Hunting": 6,
+        "Gathering": 11,
+        "Strength": 6,
+        "Charm": 2,
+        "Health": 10,
+        "Friendship": 1
+        }
+        companion_list.append(marlowe_dict)
+        print("Marlowe has been recruited!\n")
+        return companion_list
+    else:
+        print("Birch shakes their head.\n")
+        print("Birch: 'Do you know what they were talking about? I don't.\n'")
+        print("You vaguely remember having heard of an ostrich fern, but can't identify it. The storm is worsening by the second." \
+        "You need to get back.\n")
+        print("Birch: 'I hope that other cat is okay, but we need to go.'\n")
+        print("You both safely find your way back to camp and wait out the storm. Who was that other cat, and what" \
+        "did they mean by 'the ostrich fern'? Maybe if you learn more about Gathering, you can figure it out...")
+    
 
 def open_debug_menu(companion_list, inventory_dict):
     debug = True
