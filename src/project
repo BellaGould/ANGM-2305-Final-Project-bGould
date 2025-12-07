@@ -27,7 +27,7 @@ def initialize():
             "The possibilities are endless.\n")
     skill_unpicked=True
     while skill_unpicked==True:
-        player_type=input("What skill do you specialize in? Please type the number of your choice - 1.Hunting | 2.Gathering | 3.Strength | 4.Charm ")
+        player_type=input("What skill do you specialize in? Please type the number of your choice - 1.Hunting | 2.Gathering | 3.Strength | 4.Charm \n")
         if player_type == "1":
             hunt = 5
             herb = 1
@@ -150,7 +150,7 @@ def run_camp(companion_list, inventory_dict, player_dict):
     while True:
         print("Do you want to:")
         print("1. Explore   2. Cast a spell   3. Talk to someone   4. End the day\n")
-        choice = input("Type the number of your choice:")
+        choice = input("Type the number of your choice:\n")
         if choice == '1':
             if has_explored == True:
                 print("You've already sent someone out to explore today!\n")
@@ -174,7 +174,7 @@ def run_camp(companion_list, inventory_dict, player_dict):
             inventory_dict["Food"] = (inventory_dict.get("Food") - len(companion_list))
             pick_random_event(companion_list, inventory_dict, player_dict)
             run_intro(companion_list, inventory_dict)
-            run_camp(companion_list, inventory_dict)
+            run_camp(companion_list, inventory_dict, player_dict)
         elif choice == 'debug':
             open_debug_menu(companion_list, inventory_dict)
 
@@ -247,18 +247,18 @@ def cast_spell(companion_list, inventory_dict):
     herb_num = inventory_dict.get("Herbs")
     casting = True
     while casting == True:
-        print("What sort of spell would you like to cast today? 1. Health | 2. Hunting | 3. Gathering | 4. Charm | 5. Strength ")
-        spell_type = input(f"Please type the number of your choice, or r to return. | You have {herb_num} herbs.")
+        print("What sort of spell would you like to cast today? 1. Health | 2. Hunting | 3. Gathering | 4. Charm | 5. Strength \n")
+        spell_type = input(f"Please type the number of your choice, or r to return. | You have {herb_num} herbs.\n")
         if spell_type == "r":
             casting == False
             return False
         if spell_type == '1':
-            print("Healing spells recover your companions' hit points!")
+            print("Healing spells recover your companions' hit points!\n")
             print("Which healing spell would you like to cast?\n")
             print("1. Basic healing spell | Cost: 3 Herbs\n")
             print("2. Intermediate healing spell | Cost: 5 Herbs\n")
             print("3. Advanced healing spell | Cost: 10 Herbs\n")
-            healing_type = input("Please type the number of your choice, or r to return.")
+            healing_type = input("Please type the number of your choice, or r to return.\n")
             if healing_type == 'r':
                 pass
             elif healing_type == '1':
@@ -267,7 +267,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Health"] = (target_dict.get("Health") + 2)
-                    print(f"{spell_target} has gained 2 health!")
+                    print(f"{spell_target} has gained 2 health!\n")
+                    inventory_dict["Herbs"] -= 3
                     return True
             elif healing_type == '2':
                 if inventory_dict.get("Herbs") < 5:
@@ -275,7 +276,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Health"] = (target_dict.get("Health") + 4)
-                    print(f"{spell_target} has gained 4 health!")
+                    print(f"{spell_target} has gained 4 health!\n")
+                    inventory_dict["Herbs"] -= 5
                     return True
             elif healing_type == '3':
                 if inventory_dict.get("Herbs") < 10:
@@ -283,15 +285,16 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Health"] = (target_dict.get("Health") + 8)
-                    print(f"{spell_target} has gained 8 health!")
+                    print(f"{spell_target} has gained 8 health!\n")
+                    inventory_dict["Herbs"] -= 10
                     return True
         elif spell_type == '2':
             print("Hunting spells enhance your companions' abilities so they can catch more prey!")
             print("Which hunting spell would you like to cast?\n")
             print("1. Swift Paws | Cost: 5 Herbs\n")
             print("2. Bird's Eye View | Cost: 8 Herbs\n")
-            print("3. Cloak of Shadows | Cost: 12 Herbs")
-            hunting_type = input("Please type the number of your choice, or r to return.")
+            print("3. Cloak of Shadows | Cost: 12 Herbs\n")
+            hunting_type = input("Please type the number of your choice, or r to return.\n")
             if hunting_type == 'r':
                 pass
             elif hunting_type == '1':
@@ -300,7 +303,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Hunting"] = (target_dict.get("Hunting") + 1)
-                    print(f"{spell_target} has gained 1 Hunting skill!")
+                    print(f"{spell_target} has gained 1 Hunting skill!\n")
+                    inventory_dict["Herbs"] -= 5
                     return True
             elif hunting_type == '2':
                 if inventory_dict.get("Herbs") < 8:
@@ -308,7 +312,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Hunting"] = (target_dict.get("Hunting") + 4)
-                    print(f"{spell_target} has gained 4 Hunting skill!")
+                    print(f"{spell_target} has gained 4 Hunting skill!\n")
+                    inventory_dict["Herbs"] -= 8
                     return True
             elif hunting_type == '3':
                 if inventory_dict.get("Herbs") < 12:
@@ -316,15 +321,16 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Hunting"] = (target_dict.get("Hunting") + 6)
-                    print(f"{spell_target} has gained 6 Hunting skill!")
+                    print(f"{spell_target} has gained 6 Hunting skill!\n")
+                    inventory_dict["Herbs"] -= 12
                     return True
         elif spell_type == '3':
-            print("Gathering spells grant your companions better knoweldge of nature, so they naturally find more herbs.")
+            print("Gathering spells grant your companions better knoweldge of nature, so they naturally find more herbs.\n")
             print ("Which gathering spell would you like to cast?\n")
             print("1. Gatherer's Intuition | Cost: 7 Herbs\n")
             print("2. Nature Knack | Cost: 12 Herbs\n")
             print("3. Terra's Guidance | Cost: 15 Herbs\n")
-            gathering_type = input("Please type the number of your choice, or r to return.")
+            gathering_type = input("Please type the number of your choice, or r to return.\n")
             if gathering_type == 'r':
                 pass
             elif gathering_type == '1':
@@ -333,7 +339,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Gathering"] = (target_dict.get("Gathering") + 1)
-                    print(f"{spell_target} has gained 1 Gathering skill!")
+                    print(f"{spell_target} has gained 1 Gathering skill!\n")
+                    inventory_dict["Herbs"] -= 7
                     return True
             elif gathering_type == '2':
                 if inventory_dict.get("Herbs") < 12:
@@ -341,7 +348,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Gathering"] = (target_dict.get("Gathering") + 4)
-                    print(f"{spell_target} has gained 4 Gathering skill!")
+                    print(f"{spell_target} has gained 4 Gathering skill!\n")
+                    inventory_dict["Herbs"] -= 12
                     return True
             elif gathering_type == '3':
                 if inventory_dict.get("Herbs") < 15:
@@ -349,15 +357,16 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Gathering"] = (target_dict.get("Gathering") + 6)
-                    print(f"{spell_target} has gained 6 Gathering skill!")
+                    print(f"{spell_target} has gained 6 Gathering skill!\n")
+                    inventory_dict["Herbs"] -= 15
                     return True
         elif spell_type == '4':
-            print("Charm spells grant your companions the gift of gab, useful for making allies in the forest!")
+            print("Charm spells grant your companions the gift of gab, useful for making allies in the forest!\n")
             print("Which charm spell would you like to cast?\n")
             print("1. Shiny Fur | Cost: 10 Herbs\n")
             print("2. Silver Tongue | Cost: 14 Herbs\n")
-            print("3. Aura of Benevolence | Cost: 18 Herbs")
-            charm_type = input("Please type the number of your choice, or r to return.")
+            print("3. Aura of Benevolence | Cost: 18 Herbs\n")
+            charm_type = input("Please type the number of your choice, or r to return.\n")
             if charm_type == 'r':
                 pass
             elif charm_type == '1':
@@ -366,7 +375,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Charm"] = (target_dict.get("Charm") + 1)
-                    print(f"{spell_target} has gained 1 Charm skill!")
+                    print(f"{spell_target} has gained 1 Charm skill!\n")
+                    inventory_dict["Herbs"] -= 10
                     return True
             elif charm_type == '2':
                 if inventory_dict.get("Herbs") < 14:
@@ -374,7 +384,8 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Charm"] = (target_dict.get("Charm") + 4)
-                    print(f"{spell_target} has gained 4 Charm skill!")
+                    print(f"{spell_target} has gained 4 Charm skill!\n")
+                    inventory_dict["Herbs"] -= 14
                     return True
             elif charm_type == '3':
                 if inventory_dict.get("Herbs") < 18:
@@ -382,41 +393,47 @@ def cast_spell(companion_list, inventory_dict):
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Charm"] = (target_dict.get("Charm") + 6)
-                    print(f"{spell_target} has gained 6 Charm skill!")
+                    print(f"{spell_target} has gained 6 Charm skill!\n")
+                    inventory_dict["Herbs"] -= 18
                     return True
         elif spell_type == '5':
-            print("Strength spells allow your companions to deepen their power so they can do more with their magic!")
+            print("Strength spells allow your companions to deepen their power so they can do more with their magic!\n")
             print("Which strength spell would you like to cast?\n")
             print("1. Inner Spark | Cost: 17 Herbs\n")
             print("2. Potent Flame | Cost: 21 Herbs\n")
-            print("3. Inferno Soul | Cost: 25 Herbs")
-            strength_type = input("Please type the number of your choice, or r to return.")
+            print("3. Inferno Soul | Cost: 25 Herbs\n")
+            strength_type = input("Please type the number of your choice, or r to return.\n")
             if strength_type == 'r':
                 pass
             elif strength_type == '1':
-                if inventory_dict.get("Herbs") < 10:
+                if inventory_dict.get("Herbs") < 17:
                     print("You don't have enough herbs to cast that spell!\n")
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Strength"] = (target_dict.get("Strength") + 1)
-                    print(f"{spell_target} has gained 1 Strength skill!")
+                    print(f"{spell_target} has gained 1 Strength skill!\n")
+                    inventory_dict["Herbs"] -= 17
                     return True
             elif strength_type == '2':
-                if inventory_dict.get("Herbs") < 14:
+                if inventory_dict.get("Herbs") < 21:
                     print("You don't have enough herbs to cast that spell!\n")
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Strength"] = (target_dict.get("Strength") + 4)
-                    print(f"{spell_target} has gained 4 Strength skill!")
+                    print(f"{spell_target} has gained 4 Strength skill!\n")
+                    inventory_dict["Herbs"] -= 21
                     return True
             elif strength_type == '3':
-                if inventory_dict.get("Herbs") < 18:
+                if inventory_dict.get("Herbs") < 25:
                     print("You don't have enough herbs to cast that spell!\n")
                 else:
                     spell_target, target_dict = pick_spell_target(companion_list)
                     target_dict["Strength"] = (target_dict.get("Strength") + 6)
-                    print(f"{spell_target} has gained 6 Strength skill!")
+                    print(f"{spell_target} has gained 6 Strength skill!\n")
+                    inventory_dict["Herbs"] -= 25
                     return True
+        else:
+            print("Sorry, that is not a valid input.\n")
                     
 def pick_spell_target(companion_list):
     casting_list = []
@@ -620,21 +637,21 @@ def recruit_marlowe(companion_list, inventory_dict, player_dict):
     birch_dict = companion_list[0]
     
     print("The wind whips around you as you bound through the trees, cringing at the eerie howl in the sky above." \
-    "Maybe you shouldn't have chosen to head out earlier. But the scent of the storm was much fainter then, and you had thought you" \
+    "Maybe you shouldn't have chosen to head out earlier. But the scent of the storm was much fainter then, and you had thought you " \
     "could beat it. It seems you were wrong.\n")
     print("Birch runs alongside you. With a flick of their striped tail, they direct you towards a gap in the trees.\n")
     print("Birch: 'Over here! The underbrush is thinner. We'll be back sooner if we take this shortcut!'\n")
-    print("You follow them through a dry and downtrodden path. You're making good time - until you hear a loud groan that sets your fur on end." \
+    print("You follow them through a dry and downtrodden path. You're making good time - until you hear a loud groan that sets your fur on end. " \
     "Birch notices it too, and skids to a stop.\n")
     print("Birch: 'Stop! It's not safe-'\n")
-    print("They barely finish their sentence before an old tree crashes down on the path with a horrible splintering sound." \
+    print("They barely finish their sentence before an old tree crashes down on the path with a horrible splintering sound. " \
     "Among the chaos, you hear a feline wail. You rush forward to see if Birch is alright, and they almost crash into you.\n")
     print("Birch: 'That... wasn't you, was it? It wasn't me either. Is there someone else here? We have to help them!'\n")
-    print("You and Birch approach the tree and find a tiny cat with brown, mousy fur. They're crouched on the ground near the tree," \
+    print("You and Birch approach the tree and find a tiny cat with brown, mousy fur. They're crouched on the ground near the tree, " \
     "their ears back and eyes wide. Looks like it missed them by a whisker.\n")
-    print("Birch is immediately at the stranger's side, nudging them up.")
+    print("Birch is immediately at the stranger's side, nudging them up.\n")
     print("Birch: 'Are you hurt? Our camp is just a little while south of here! Come with us, and you'll be safe there!'\n")
-    print("The stranger mutters to themself, still bug-eyed.")
+    print("The stranger mutters to themself, still bug-eyed.\n")
     print("Stranger: 'No, no, near here, there's...'\n")
     print("They jump up like they've been struck by lightning.\n")
     print("Stranger: 'The ostrich fern! Follow the ostrich fern!'\n")
@@ -649,7 +666,7 @@ def recruit_marlowe(companion_list, inventory_dict, player_dict):
         "The ostrich fern! There are more clumps of them in the distance. With your path home cut off and danger imminent," \
         "you decide to take a chance on the stranger's advice. You and Birch follow the ferns, and eventually come to an enormous" \
         "bush of them around a small hill. There's a tunnel leading inside the hill, so you and Birch crawl in.\n")
-        print("It's dark inside, but thankfully quiet compared to the roaring outdoors. The tunnel slowly widens out into a" \
+        print("It's dark inside, but thankfully quiet compared to the roaring outdoors. The tunnel slowly widens out into a " \
         "small living space. You spot the nervous cat from earlier.\n")
         print("Stranger: 'You- oh, th-thank goodness. You found it. Are either of you hurt?'\n")
         print("Birch: 'I think we're both fine. Thank you for leading us here. Is this your home?'\n")
