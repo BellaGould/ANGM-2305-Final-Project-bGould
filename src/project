@@ -11,7 +11,7 @@ def main():
     run_intro(companion_list, inventory_dict)
     #for the sake of clarity, I think run_intro should only take care of the new day and status report messages.
     #the camp choices can go to another function.
-    run_camp(companion_list, inventory_dict, player_dict)
+    run_camp(companion_list, inventory_dict, player_dict, filename)
 
 def initialize():
     #add some fancy stuff here later. Print title and intro story.
@@ -300,6 +300,31 @@ def load_file():
                         companion_list.append(elwood_dict)
                 return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
                     
+def save_game(companion_list, inventory_dict, player_dict, filename):
+    with open(filename, 'w', newline='') as file:
+        csv_writer=csv.writer(file)
+        herb = inventory_dict.get("Herbs")
+        food = inventory_dict.get("Food")
+        csv_writer.writerow(["Inventory", herb, food])
+        p_name = player_dict.get("Name")
+        p_hunt = player_dict.get("Hunting")
+        p_gather = player_dict.get("Gathering")
+        p_strength = player_dict.get("Strength")
+        p_charm = player_dict.get("Charm")
+        p_health = player_dict.get("Health")
+        csv_writer.writerow([p_name, p_hunt, p_gather, p_strength, p_charm, p_health])
+
+        for cat in companion_list:
+            name = cat.get("Name")
+            hunt = cat.get("Hunting")
+            gather = cat.get("Gathering")
+            strength = cat.get("Strength")
+            charm = cat.get("Charm")
+            health = cat.get("Health")
+            friendship = cat.get("Friendship")
+            csv_writer.writerow([name, hunt, gather, strength, charm, health, friendship])
+        print("File has been saved!")
+        return
 
 def run_intro(companion_list, inventory_dict):
     #this runs the status report at the beginning of every day.
@@ -329,13 +354,13 @@ def run_intro(companion_list, inventory_dict):
         print(f"Friendship:{cat_friend}\n")
     print ("-"*20)
 
-def run_camp(companion_list, inventory_dict, player_dict):
+def run_camp(companion_list, inventory_dict, player_dict, filename):
     has_explored = False
     has_cast_spell = False
     has_talked = False
     while True:
         print("Do you want to:")
-        print("1. Explore   2. Cast a spell   3. Talk to someone   4. End the day\n")
+        print("1. Explore   2. Cast a spell   3. Talk to someone   4. End the day  5. Save\n")
         choice = input("Type the number of your choice:\n")
         print ("-"*20)
         if choice == '1':
@@ -351,13 +376,9 @@ def run_camp(companion_list, inventory_dict, player_dict):
         elif choice == '3':
             if has_talked == True:
                 print("Your coven is busy...\n")
-                #note: friendship boosts don't work.
             else:
                 has_talked = talk_to_companions(companion_list, player_dict)
-                
         elif choice == '4':
-            #mb put the random event here?
-            #Food minus one.
             print ("-"*20)
             print("Later that day...\n")
             pick_random_event(companion_list, inventory_dict, player_dict)
@@ -369,6 +390,8 @@ def run_camp(companion_list, inventory_dict, player_dict):
                     cat["Health"] -= 2
             run_intro(companion_list, inventory_dict)
             run_camp(companion_list, inventory_dict, player_dict)
+        elif choice == '5':
+            save_game(companion_list, inventory_dict, player_dict, filename)
         elif choice == 'debug':
             open_debug_menu(companion_list, inventory_dict, player_dict)
 
