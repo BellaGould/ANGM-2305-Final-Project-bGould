@@ -626,9 +626,123 @@ def talk_to_birch(companion_list, player_dict):
     birch_dict["Friendship"] += 1
 
 def talk_to_marlowe(companion_list, player_dict):
-    birch_dict = companion_list[0]
-    friendship = birch_dict.get("Friendship")
+    marlowe_dict = companion_list[1]
+    friendship = marlowe_dict.get("Friendship")
+    increase = min((friendship//4), 5)
     player_name = player_dict.get("Name")
+    number = random.randrange(1,6)
+    if friendship == 1 or 2:
+        if number == 1:
+            print(f"Marlowe: 'O-oh, hello {player_name}. Did you need anything?'\n")
+            marlowe_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print("Marlowe: 'S-STOP! ...Um, you were about to step on that herb there... Oh, I shouldn't have yelled... S-sorry...'\n")
+            marlowe_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Marlowe: 'Um, if you ever need something from my garden, just let me know... I have lots of plants.'\n")
+            marlowe_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print("Marlowe: 'The soil in this area of the forest is very healthy, you know? L-lots of different plants grow around here.'\n")
+            marlowe_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print("Marlowe: 'I-it's a little nerve-wracking being around all these other cats... But I'll try my best...'\n")
+            marlowe_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship == 3 or 4:
+        if number == 1:
+            print("'I-I hope you don't mind that I still spend a lot of time at my old home... My garden is over there, "
+                  "so I go back to tend to it.'\n")
+            marlowe_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print("Marlowe: 'I like the forest. It's very peaceful. Do you go for walks there often?'\n")
+            marlowe_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Marlowe: 'Plants are so interesting. They have their own sort of language, i-if you pay attention.'\n")
+            marlowe_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print("Marlowe: 'W-would these herbs be useful to the coven? I grew them myself.'\n")
+            marlowe_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print("Marlowe: 'H-huh?! O-oh, you just caught me daydreaming. Sorry, I'll pay more attention...'\n")
+            marlowe_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship == 5 or 6:
+        if number == 1:
+            print("Marlowe: 'Hehe... My garden looks healthy today. Would you like to come see?'\n")
+            marlowe_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print("Marlowe: 'B-Birch is really nice. The other day I caught a rabbit nibbling on my plants, and Birch said "
+                  "they'd go searching to see if they could find its burrow and chase it off.'\n")
+            marlowe_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Marlowe: 'I thought I was experienced in using herbs for spellcasting, b-but seeing what a coven working together can "
+                  "do... I've only scratched the surface.'\n")
+            marlowe_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print("Marlowe: 'A-are there any plants you've been having trouble finding? B-bring me a sample, and I can try to cultivate it...'\n")
+            marlowe_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print("Marlowe: 'S-sometimes I get stressed in crowds, but the coven has such a peaceful atmosphere...'\n")
+            marlowe_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship == 7 or 8:
+        if number == 1:
+            print("Marlowe: 'My favorite plant? ...I know you'd expect me to say ferns, but it's actually sunflowers. Th-they're " \
+            "so pretty, and they even give back to other plants by enriching the soil...'\n")
+            marlowe_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print(f"Marlowe: '{player_name}! I have an empty plot in my garden. I-if you'd like, I can teach you how to plant something...'\n")
+            marlowe_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print(f"Marlowe: 'U-um, {player_name}? Is there anything I can help with?'\n")
+            marlowe_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print("Marlowe: 'Thinking back on that day we met... G-goodness, I was so panicked I could barely think. I-it's a bit " \
+            "of a miracle that you understood me...'\n")
+            marlowe_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print("Marlowe: 'Another beautiful day in the forest. W-would you like to take a walk in my garden together?'\n")
+            marlowe_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship >= 9:
+        if number == 1:
+            print("Marlowe: 'Here, th-this is for you... Uh, n-no, it doesn't have any magic properties. It's just a zinnia. D-do " \
+            "you know flower language, by any chance?'\n")
+            marlowe_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print(f"Marlowe: 'I'm so glad you asked me to join your coven. ...Why am I saying that now? O-oh, just feeling sentimental...'\n")
+            marlowe_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print(f"Marlowe: '{player_name}! Oh, I just wanted to let you know... Those herbs that you helped me plant are doing great! "
+                  "We can probably harvest them soon.'\n")
+            marlowe_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print("Marlowe: 'To me, a dear friend is someone you can be comfortable in silence with... Like you, for example.'\n")
+            marlowe_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print(f"Marlowe: 'Oh, {player_name}! I'm practicing my magic. I want to get stronger so I can support everyone better.'\n")
+            marlowe_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
 
 def pick_random_event(companion_list, inventory_dict, player_dict):
     #range max = 1+ the number of items on companion list times ten.
