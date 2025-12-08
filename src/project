@@ -124,20 +124,27 @@ def run_intro(companion_list, inventory_dict):
     #this runs the status report at the beginning of every day.
     print("It's a new day!")
     print("Status Report:")
-    #for each cat in companion_list:
-    #if is_injured = True:
-    #print("{cat_name} is injured!")
-    #else:
-    #print("{cat_name} is ready to go!")
+    print ("-"*20)
     herb = inventory_dict.get("Herbs")
     food = inventory_dict.get("Food")
     print(f"You have {herb} herbs and {food} food.\n")
     for cat in companion_list:
         cat_name = cat.get("Name")
+        cat_health = cat.get("Health")
+        cat_hunt = cat.get("Hunting")
+        cat_gather = cat.get("Gathering")
+        cat_charm = cat.get("Charm")
+        cat_strength = cat.get("Strength")
         if cat.get("Health") <=0:
             print(f"{cat_name} is injured!\n")
         else:
             print(f"{cat_name} is ready to go!\n")
+        print(f"Health: {cat_health}")
+        print(f"Hunting: {cat_hunt}")
+        print(f"Gathering: {cat_gather}")
+        print(f"Charm: {cat_charm}")
+        print(f"Strength: {cat_strength}\n")
+    print ("-"*20)
 
 def run_camp(companion_list, inventory_dict, player_dict):
     #this covers the player input. It should ask them if they want to send someone exploring, cast a spell, or talk to their companions.
@@ -150,6 +157,7 @@ def run_camp(companion_list, inventory_dict, player_dict):
         print("Do you want to:")
         print("1. Explore   2. Cast a spell   3. Talk to someone   4. End the day\n")
         choice = input("Type the number of your choice:\n")
+        print ("-"*20)
         if choice == '1':
             if has_explored == True:
                 print("You've already sent someone out to explore today!\n")
@@ -164,24 +172,27 @@ def run_camp(companion_list, inventory_dict, player_dict):
             if has_talked == True:
                 print("Your coven is busy...\n")
             else:
-                #add talking stuff here
-                pass
+                has_talked = talk_to_companions(companion_list, player_dict)
+                
         elif choice == '4':
             #mb put the random event here?
             #Food minus one.
+            print ("-"*20)
             print("Later that day...\n")
             inventory_dict["Food"] = (inventory_dict.get("Food") - len(companion_list))
             pick_random_event(companion_list, inventory_dict, player_dict)
+            print ("-"*20)
             run_intro(companion_list, inventory_dict)
             run_camp(companion_list, inventory_dict, player_dict)
         elif choice == 'debug':
-            open_debug_menu(companion_list, inventory_dict)
+            open_debug_menu(companion_list, inventory_dict, player_dict)
 
 def send_exploring(companion_list, inventory_dict):
     exploring_list = []
     exploring = True
     while exploring == True:
         print("Who do you want to send out? The available cats are:\n")
+        print ("-"*20)
         for cat in companion_list:
             cat_name = cat.get("Name")
             if cat.get("Health") > 0:
@@ -189,6 +200,7 @@ def send_exploring(companion_list, inventory_dict):
                 exploring_list.append(cat_name)
             else:
                 pass
+        print ("-"*20)
         explore_companion = input("Type the name of the cat you want to send, or type r to return. ")
         if explore_companion in exploring_list:
             food_gained, herb_gained = calculate_explore(explore_companion, companion_list)
@@ -204,8 +216,10 @@ def send_exploring(companion_list, inventory_dict):
             print()
 
 def calculate_explore(explore_companion, companion_list):
-    if explore_companion == 'Birch':
+    if explore_companion.capitalize == 'Birch':
         explore_dict = companion_list[0]
+    elif explore_companion.capitalize == 'Marlowe':
+        explore_dict = companion_list[1]
     companion_hunt = explore_dict.get("Hunting")
     companion_gather = explore_dict.get("Gathering")
     explore_dict["Health"] = (explore_dict.get("Health") - 1)
@@ -252,11 +266,13 @@ def cast_spell(companion_list, inventory_dict):
             casting == False
             return False
         if spell_type == '1':
+            print ("-"*20)
             print("Healing spells recover your companions' hit points!\n")
             print("Which healing spell would you like to cast?\n")
             print("1. Basic healing spell | Cost: 3 Herbs\n")
             print("2. Intermediate healing spell | Cost: 5 Herbs\n")
             print("3. Advanced healing spell | Cost: 10 Herbs\n")
+            print ("-"*20)
             healing_type = input("Please type the number of your choice, or r to return.\n")
             if healing_type == 'r':
                 pass
@@ -288,11 +304,13 @@ def cast_spell(companion_list, inventory_dict):
                     inventory_dict["Herbs"] -= 10
                     return True
         elif spell_type == '2':
+            print ("-"*20)
             print("Hunting spells enhance your companions' abilities so they can catch more prey!")
             print("Which hunting spell would you like to cast?\n")
             print("1. Swift Paws | Cost: 5 Herbs\n")
             print("2. Bird's Eye View | Cost: 8 Herbs\n")
             print("3. Cloak of Shadows | Cost: 12 Herbs\n")
+            print ("-"*20)
             hunting_type = input("Please type the number of your choice, or r to return.\n")
             if hunting_type == 'r':
                 pass
@@ -324,11 +342,13 @@ def cast_spell(companion_list, inventory_dict):
                     inventory_dict["Herbs"] -= 12
                     return True
         elif spell_type == '3':
+            print ("-"*20)
             print("Gathering spells grant your companions better knoweldge of nature, so they naturally find more herbs.\n")
             print ("Which gathering spell would you like to cast?\n")
             print("1. Gatherer's Intuition | Cost: 7 Herbs\n")
             print("2. Nature Knack | Cost: 12 Herbs\n")
             print("3. Terra's Guidance | Cost: 15 Herbs\n")
+            print ("-"*20)
             gathering_type = input("Please type the number of your choice, or r to return.\n")
             if gathering_type == 'r':
                 pass
@@ -360,11 +380,13 @@ def cast_spell(companion_list, inventory_dict):
                     inventory_dict["Herbs"] -= 15
                     return True
         elif spell_type == '4':
+            print ("-"*20)
             print("Charm spells grant your companions the gift of gab, useful for making allies in the forest!\n")
             print("Which charm spell would you like to cast?\n")
             print("1. Shiny Fur | Cost: 10 Herbs\n")
             print("2. Silver Tongue | Cost: 14 Herbs\n")
             print("3. Aura of Benevolence | Cost: 18 Herbs\n")
+            print ("-"*20)
             charm_type = input("Please type the number of your choice, or r to return.\n")
             if charm_type == 'r':
                 pass
@@ -396,11 +418,13 @@ def cast_spell(companion_list, inventory_dict):
                     inventory_dict["Herbs"] -= 18
                     return True
         elif spell_type == '5':
+            print ("-"*20)
             print("Strength spells allow your companions to deepen their power so they can do more with their magic!\n")
             print("Which strength spell would you like to cast?\n")
             print("1. Inner Spark | Cost: 17 Herbs\n")
             print("2. Potent Flame | Cost: 21 Herbs\n")
             print("3. Inferno Soul | Cost: 25 Herbs\n")
+            print ("-"*20)
             strength_type = input("Please type the number of your choice, or r to return.\n")
             if strength_type == 'r':
                 pass
@@ -458,6 +482,153 @@ def pick_spell_target(companion_list):
             return spell_target, target_dict
         else:
             print("Sorry, that's not a valid input. Please type another answer.")
+
+def talk_to_companions(companion_list, player_dict):
+    talk_list = []
+    while True:
+        print("Which companion would you like to check in on? Current companions are:\n")
+        print ("-"*20)
+        for cat in companion_list:
+            cat_name = cat.get("Name")
+            talk_list.append(cat_name)
+            print(f"{cat_name}\n")
+        print ("-"*20)    
+        companion = input("Type the name of the cat you want to speak to, or type r to return.\n")
+        if companion.capitalize in talk_list:
+            if companion.capitalize == 'Birch':
+                talk_to_birch(companion_list)
+                return True
+            elif companion.capitalize == 'Marlowe':
+                talk_to_marlowe(companion_list)
+                return True
+        elif companion.lower == "r":
+            False
+            return False
+        else:
+            print("Sorry, that is not a valid input. Please type a companion name or r.")
+
+def talk_to_birch(companion_list, player_dict):
+    #talking to companions randomly increases their skills, providing an incentive for paying attention to them.
+    birch_dict = companion_list[0]
+    friendship = birch_dict.get("Friendship")
+    increase = min((friendship//4), 5)
+    player_name = player_dict.get("Name")
+    number = random.randrange(1,6)
+    if friendship == 1 or 2:
+        if number == 1:
+            print(f"Birch: 'Oh, hi {player_name}. What do you need?'\n")
+            birch_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print("Birch: 'Smells like rain today. Make sure to stay dry.'\n")
+            birch_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Birch: 'It's interesting to be in a coven for the first time. Hope we all work well together.'\n")
+            birch_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print("Birch: 'I may be just a amateur witch, but I'll do my best to support you.'\n")
+            birch_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print("Birch: 'Good luck hunting today. I smelled a lot of prey out there earlier.'\n")
+            birch_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship == 3 or 4:
+        if number == 1:
+            print(f"Birch: '{player_name}! How are you?'\n")
+            birch_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print("Birch: 'Do you want to go out hunting later? I bet we'll catch more if we work together.'\n")
+            birch_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Birch: 'How are the spells going? Sorry, I know I'm not too helpful with those.'\n")
+            birch_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print("Birch: 'Have you ever seen those housecats wandering around the forest edge? Don't know how they live like that, " \
+            "stuck in a big box half the time.'\n")
+            birch_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print(f"Birch: '{player_name}! I caught a big rabbit. Want to share it?'\n")
+            birch_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship == 5 or 6:
+        if number == 1:
+            print(f"Birch: 'Oh, {player_name}. It's good to see you.'\n")
+            birch_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print(f"Birch: '{player_name}, here, I got the herbs you needed... Huh? These are the wrong ones? Darnit.'\n")
+            birch_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Birch: 'I really love the sense of community here. You've built a good coven.'\n")
+            birch_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print(f"Birch: '{player_name}, would you come exploring with me later? Feels like it's been a while " 
+                  "since we've had a good chat.'\n")
+            birch_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print("Birch: 'What's with the weather these days? Feels like it changes in a blink.'\n")
+            birch_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship == 7 or 8:
+        if number == 1:
+            print(f"Birch: '{player_name}! Good to see you around. How have you been?.'\n")
+            birch_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print(f"Birch: 'Hey, {player_name}? Thank you for being so patient with me. I don't have much of an aptitude for magic, "
+                  "but this coven is definitely where I belong.'\n")
+            birch_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Birch: 'Another great day. What do you want to do?'\n")
+            birch_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print(f"Birch: 'Hey, there goes our brave leader. What are you up to, {player_name}?'\n")
+            birch_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print(f"Birch: 'Hey {player_name}, I know you're busy. Can I help take anything off your plate?'\n")
+            birch_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    elif friendship >= 9:
+        if number == 1:
+            print("Birch: 'How lucky is it that we bumped into each other when we did? I used to be a solo cat, but I can't "
+                  "imagine life without you and the coven.'\n")
+            birch_dict["Health"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 2:
+            print(f"Birch: '{player_name}! My first friend in the forest. How are you?'\n")
+            birch_dict["Hunting"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 3:
+            print("Birch: 'What do 'I' feel like doing today? Hm... Maybe hunting with my best friend? What do you say?'\n")
+            birch_dict["Gathering"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 4:
+            print(f"Birch: '{player_name}, do you need me for anything? I'll do whatever I can to help out.'\n")
+            birch_dict["Charm"] += increase
+            input("Press Enter to continue.\n")
+        elif number == 5:
+            print(f"Birch: '{player_name}! I found this herb! It's useful, right...? Yeah! Got the right one!'\n")
+            birch_dict["Strength"] += increase
+            input("Press Enter to continue.\n")
+    birch_dict["Friendship"] += 1
+
+def talk_to_marlowe(companion_list, player_dict):
+    birch_dict = companion_list[0]
+    friendship = birch_dict.get("Friendship")
+    player_name = player_dict.get("Name")
 
 def pick_random_event(companion_list, inventory_dict, player_dict):
     #range max = 1+ the number of items on companion list times ten.
@@ -720,7 +891,7 @@ def recruit_marlowe(companion_list, inventory_dict, player_dict):
         input("Press Enter to continue.\n")
     
 
-def open_debug_menu(companion_list, inventory_dict):
+def open_debug_menu(companion_list, inventory_dict, player_dict):
     debug = True
     while debug == True:
         debug_command = input("Please input your command or r to return. ")
@@ -728,6 +899,8 @@ def open_debug_menu(companion_list, inventory_dict):
             inventory_dict["Food"] = 100
         elif debug_command == "herb":
             inventory_dict["Herbs"] = 100
+        elif debug_command == "marlowe":
+            recruit_marlowe(companion_list, inventory_dict, player_dict)
         elif debug_command == 'r':
             debug = False
             return
