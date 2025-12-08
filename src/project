@@ -32,6 +32,7 @@ def initialize():
             "or enter any other key to ignore the tutorial.\n")
             if tutorial_skip == '1':
                 run_tutorial(player_name)
+            print ("-"*20)
             print("Before you start your coven, we need to know what sort of leader you'll be.\n")
             print("As leader, your skills and personality influence everyone in the coven. "
                   "Your leader type will provide a stat boost to every cat you recruit.\n")
@@ -181,29 +182,29 @@ def load_file():
         "Enter r to return to the game menu.\n")
         filename = f"{player_name}.csv"
         try:
-            open (filename, 'r') 
+            open(filename, 'r') 
         except FileNotFoundError:
             print("Sorry, we couldn't find your file. Make sure you entered your name correctly and that the file is still in the game src folder.\n")
             filename.close()
         else:
             print("File found. Now loading...")
             companion_list = []
-            with (filename, 'r') as file:
-                reader = csv.reader(filename)
+            with open(filename, 'r') as file:
+                reader = csv.reader(file)
                 for row in reader:
                     if row[0] == 'Inventory':
-                        herbs = row[1]
-                        food = row[2]
+                        herbs = int(row[1])
+                        food = int(row[2])
                         inventory_dict = {
                         "Herbs": herbs,
                         "Food": food
                         }
                     elif row[0] == player_name:
-                        hunt = row[1]
-                        gather = row[2]
-                        strength = row[3]
-                        charm = row[4]
-                        health = row[5]
+                        hunt = int(row[1])
+                        gather = int(row[2])
+                        strength = int(row[3])
+                        charm = int(row[4])
+                        health = int(row[5])
                         player_dict = {
                         "Name": player_name,
                         "Hunting": hunt,
@@ -214,12 +215,12 @@ def load_file():
                         }
                         #if there's updated info on a companion, the game will overwrite their OG stats with that.
                     elif row[0] == 'Birch':
-                        hunt = row[1]
-                        gather = row[2]
-                        strength = row[3]
-                        charm = row[4]
-                        health = row[5]
-                        friendship = row[6]
+                        hunt = int(row[1])
+                        gather = int(row[2])
+                        strength = int(row[3])
+                        charm = int(row[4])
+                        health = int(row[5])
+                        friendship = int(row[6])
                         birch_dict = {
                         "Name": 'Birch',
                         "Hunting": hunt,
@@ -298,7 +299,7 @@ def load_file():
                         "Friendship": friendship
                         }
                         companion_list.append(elwood_dict)
-                return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
+            return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
                     
 def save_game(companion_list, inventory_dict, player_dict, filename):
     with open(filename, 'w', newline='') as file:
@@ -389,7 +390,7 @@ def run_camp(companion_list, inventory_dict, player_dict, filename):
                 for cat in companion_list:
                     cat["Health"] -= 2
             run_intro(companion_list, inventory_dict)
-            run_camp(companion_list, inventory_dict, player_dict)
+            run_camp(companion_list, inventory_dict, player_dict, filename)
         elif choice == '5':
             save_game(companion_list, inventory_dict, player_dict, filename)
         elif choice == 'debug':
