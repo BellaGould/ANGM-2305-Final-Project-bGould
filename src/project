@@ -135,6 +135,7 @@ def run_intro(companion_list, inventory_dict):
         cat_gather = cat.get("Gathering")
         cat_charm = cat.get("Charm")
         cat_strength = cat.get("Strength")
+        cat_friend = cat.get("Friendship")
         if cat.get("Health") <=0:
             print(f"{cat_name} is injured!\n")
         else:
@@ -143,13 +144,11 @@ def run_intro(companion_list, inventory_dict):
         print(f"Hunting: {cat_hunt}")
         print(f"Gathering: {cat_gather}")
         print(f"Charm: {cat_charm}")
-        print(f"Strength: {cat_strength}\n")
+        print(f"Strength: {cat_strength}")
+        print(f"Friendship:{cat_friend}\n")
     print ("-"*20)
 
 def run_camp(companion_list, inventory_dict, player_dict):
-    #this covers the player input. It should ask them if they want to send someone exploring, cast a spell, or talk to their companions.
-    #also mb I should add a debug function for easy testing?
-    
     has_explored = False
     has_cast_spell = False
     has_talked = False
@@ -171,6 +170,7 @@ def run_camp(companion_list, inventory_dict, player_dict):
         elif choice == '3':
             if has_talked == True:
                 print("Your coven is busy...\n")
+                #note: friendship boosts don't work.
             else:
                 has_talked = talk_to_companions(companion_list, player_dict)
                 
@@ -216,9 +216,9 @@ def send_exploring(companion_list, inventory_dict):
             print()
 
 def calculate_explore(explore_companion, companion_list):
-    if explore_companion.capitalize == 'Birch':
+    if explore_companion == 'Birch':
         explore_dict = companion_list[0]
-    elif explore_companion.capitalize == 'Marlowe':
+    elif explore_companion == 'Marlowe':
         explore_dict = companion_list[1]
     companion_hunt = explore_dict.get("Hunting")
     companion_gather = explore_dict.get("Gathering")
@@ -494,12 +494,12 @@ def talk_to_companions(companion_list, player_dict):
             print(f"{cat_name}\n")
         print ("-"*20)    
         companion = input("Type the name of the cat you want to speak to, or type r to return.\n")
-        if companion.capitalize in talk_list:
-            if companion.capitalize == 'Birch':
-                talk_to_birch(companion_list)
+        if companion in talk_list:
+            if companion == 'Birch':
+                talk_to_birch(companion_list, player_dict)
                 return True
-            elif companion.capitalize == 'Marlowe':
-                talk_to_marlowe(companion_list)
+            elif companion == 'Marlowe':
+                talk_to_marlowe(companion_list, player_dict)
                 return True
         elif companion.lower == "r":
             False
@@ -789,15 +789,17 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                 print("Birch: 'Lucky that I have such a smart coven leader. Thanks for looking out for me.'\n")
                 print("You chat with Birch as they patch themself up. Birch has gained 2 Health!")
                 birch_dict["Health"] = (birch_dict.get("Health") + 2)
-                input("Press Enter to continue.\n")
                 False
+                input("Press Enter to continue.\n")
+                return
             elif choice_rndm5 == '2':
                 print("Birch stands up a bit taller, and you see a sparkle in their eyes. You know they love hunting.\n")
                 print("Birch: 'Really? That's a great idea! If we go now, we can make another sweep of the forest before the sun sets!\n")
                 print("You and Birch have a great time hunting. You gain 4 Food!")
                 inventory_dict["Food"] = (inventory_dict.get("Food") + 4)
-                input("Press Enter to continue.\n")
                 False
+                input("Press Enter to continue.\n")
+                return
     elif pick_number == 6:
         print("You walk outside your den to find Birch waiting for you. They seem troubled by something.\n")
         print(f"Birch: '{player_name}... I've been thinking. The purpose of a coven is for witch-cats to support each other by pooling their magic, right?'\n")
@@ -818,8 +820,9 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                     "They've been bringing in more prey than ever!\n")
                 print("Birch has gained 2 Hunting.")
                 birch_dict["Hunting"] = (birch_dict.get("Hunting") + 2)
-                input("Press Enter to continue.\n")
                 False
+                input("Press Enter to continue.\n")
+                return
             elif choice_rndm6 == '2':
                 print("You offer to explain what you know to Birch and try and help them understand.\n")
                 print("Birch looks unsure, but then nods, a determined look about them.\n")
@@ -832,8 +835,9 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                 print("Birch: 'These are it, right? The mint you needed for that one spell?'\n")
                 print("Birch has gained 2 Gathering.")
                 birch_dict["Gathering"] = (birch_dict.get("Gathering") + 2)
-                input("Press Enter to continue.\n")
                 False
+                input("Press Enter to continue.\n")
+                return
     elif pick_number == 7:
          fox_fight(birch_dict, player_dict, player_name)
     elif pick_number == 8:
@@ -857,16 +861,18 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                     print("You have gained 3 Herbs and 3 Food!\n")
                     inventory_dict["Food"] += 3
                     inventory_dict["Herbs"] += 3
-                    input("Press Enter to continue.\n")
                     False
+                    input("Press Enter to continue.\n")
+                    return
                 else:
                     print("You don't want to waste the mushrooms, but you and Birch struggle to identify which " \
                     "ones are which. At one point Birch bites down on a mushroom head only to begin choking on a " \
                     "burst of spores. You end up getting rid of all the mushrooms, just to be safe.\n")
                     print("Birch has lost 1 Health.\n")
                     birch_dict["Health"] -= 1
-                    input("Press Enter to continue.\n")
                     False
+                    input("Press Enter to continue.\n")
+                    return
     elif pick_number == 9:
         print("A strange cat wanders into your camp, muttering to themself. They reek of asphalt and kibble - a housecat, " \
         "maybe? But what are they doing all the way out here?\n")
@@ -889,15 +895,17 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                     "that's what covens are for, right?'\n")
                     print("You have gained 1 Friendship with Birch!")
                     birch_dict["Friendship"] += 1
-                    input("Press Enter to continue.\n")
                     False
+                    input("Press Enter to continue.\n")
+                    return
                 else:
                     print("Despite your best attempts, the lost cat only gets more and more upset. Suddenly, they lash out at you! " \
                     "Birch pushes you away at the last second.\n")
                     print("Birch has lost 2 Health.")
                     birch_dict["Health"] -= 2
-                    input("Press Enter to continue.\n")
                     False
+                    input("Press Enter to continue.\n")
+                    return
     elif pick_number == 10:
         if len(companion_list) != 1:
             print("It was an uneventful day.\n")
@@ -929,11 +937,14 @@ def fox_fight(birch_dict, player_dict, player_name):
                 birch_dict["Health"] = (birch_dict.get("Health") - 2)
             print("You recovered the prey, gaining 2 Food!")
             False
+            return
         elif choice_rndm7 == '2':
             print("You call for Birch to retreat. They hesitate, looking longingly at the prey pile, but follow your lead.\n")
             print("Foxes can easily injure a cat. You shouldn't fight them unless you're confident in your Strength.\n")
-            input("Press Enter to continue.\n")
             False
+            input("Press Enter to continue.\n")
+            return
+            
             
 def recruit_marlowe(companion_list, inventory_dict, player_dict):
     player_name = player_dict.get("Name")
