@@ -15,110 +15,291 @@ def main():
 
 def initialize():
     #add some fancy stuff here later. Print title and intro story.
-    #allow player to pick name
-    player_name=input("What is your name? ")
-    filename=f"{player_name}.csv"
-    print(f"Welcome to Cat's Cradle Coven, {player_name}! Are you ready to start on a new adventure?\n")
-    print("But before you start your coven, we need to know what sort of leader you'll be.\n")
-    print("As leader, your skills and personality influence everyone in the coven. Your leader type will provide a stat boost to every cat you recruit.\n")
-    print("Some cats excel at the art of the hunt, while others have an excellent intuition for dealing with herbs. "
-            "Do you disperse enemies through shows of strength, or charm them with a silver tongue? "
-            "The possibilities are endless.\n")
-    skill_unpicked=True
-    while skill_unpicked==True:
-        player_type=input("What skill do you specialize in? Please type the number of your choice - 1.Hunting | 2.Gathering | 3.Strength | 4.Charm \n")
-        if player_type == "1":
-            hunt = 5
-            herb = 1
-            fight = 1
-            talk = 1
-            skill_unpicked=False
-        elif player_type == "2":
-            hunt = 1
-            herb = 5
-            fight = 1
-            talk = 1
-            skill_unpicked=False
-        elif player_type == "3":
-            hunt = 1
-            herb = 1
-            fight = 5
-            talk = 1
-            skill_unpicked=False
-        elif player_type == "4":
-            hunt = 1
-            herb = 1
-            fight = 1
-            talk = 5
-            skill_unpicked=False
-        else:
-            print("Sorry, that was not a valid response. Please type 1, 2, 3, or 4.")
-            continue
-    #create a csv file that will act as a save point using the player's name as a naming convention.
-    #if there is already a file, load that instead.
-    #Add the player's name and their starter stats, then first companion's name/stats
-    with open(filename, 'w', newline='') as file:
-        csv_writer=csv.writer(file)
-        csv_writer.writerow(["Name", "Hunting", "Gathering", "Strength", "Charm", "Health", "Friendship"])
-        csv_writer.writerow([player_name, hunt, herb, fight, talk, "5", "1"])
-        csv_writer.writerow(["Birch", "4", "1", "3", "3", "5", "1"])
+    print("Hello, and welcome to Cat's Cradle Coven!\n")
+    while True:
+        print("Would you like to (1.) load an old save file, or (2.) start a new one?\n")
+        save_load = input("Please type the number of your choice.")
+        if save_load == '1':
+            player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict = load_file()
+            return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
+        elif save_load == '2':
+            player_name=input("It's time to begin a new adventure! What is your name?")
+            filename=f"{player_name}.csv"
+            print(f"Welcome, {player_name}! In this game, you will play as a cat-witch leading your coven of fellows in a quest to"
+                  "gain ever more power and knowledge!\n")
+            print("You'll meet new friends, upgrade your stats and manage daily life in the coven.\n")
+            tutorial_skip = input("Before we begin, would you like a more in-depth overview of game mechanics? Enter 1 if that's the case," \
+            "or enter any other key to ignore the tutorial.\n")
+            if tutorial_skip == '1':
+                run_tutorial(player_name)
+            print("Before you start your coven, we need to know what sort of leader you'll be.\n")
+            print("As leader, your skills and personality influence everyone in the coven. "
+                  "Your leader type will provide a stat boost to every cat you recruit.\n")
+            print("Some cats excel at the art of the hunt, while others have an excellent intuition for dealing with herbs. "
+                    "Do you disperse enemies through shows of strength, or charm them with a silver tongue? "
+                    "The possibilities are endless.\n")
+            skill_unpicked=True
+            while skill_unpicked==True:
+                player_type=input("What skill do you specialize in? Please type the number of your choice - 1.Hunting | 2.Gathering | 3.Strength | 4.Charm \n")
+                if player_type == "1":
+                    hunt = 5
+                    herb = 1
+                    fight = 1
+                    talk = 1
+                    skill_unpicked=False
+                elif player_type == "2":
+                    hunt = 1
+                    herb = 5
+                    fight = 1
+                    talk = 1
+                    skill_unpicked=False
+                elif player_type == "3":
+                    hunt = 1
+                    herb = 1
+                    fight = 5
+                    talk = 1
+                    skill_unpicked=False
+                elif player_type == "4":
+                    hunt = 1
+                    herb = 1
+                    fight = 1
+                    talk = 5
+                    skill_unpicked=False
+                else:
+                    print("Sorry, that was not a valid response. Please type 1, 2, 3, or 4.")
+                    continue
+            #create a csv file that will act as a save point using the player's name as a naming convention.
+            #if there is already a file, load that instead.
+            #Add the player's name and their starter stats, then first companion's name/stats
+            with open(filename, 'w', newline='') as file:
+                csv_writer=csv.writer(file)
+                csv_writer.writerow(["Inventory", "0", "0"])
+                csv_writer.writerow(["Name", "Hunting", "Gathering", "Strength", "Charm", "Health", "Friendship"])
+                csv_writer.writerow([player_name, hunt, herb, fight, talk, "5", "1"])
+                csv_writer.writerow(["Birch", "3", "0", "2", "2", "5", "1"])
 
-    #then make a dictionary for player and Birch, for easy access
-    player_dict = {
-        "Name": player_name,
-        "Hunting": hunt,
-        "Gathering": herb,
-        "Strength": fight,
-        "Charm": talk,
-        "Health": 5
-    }
-    birch_dict = {
-        "Name": "Birch",
-        "Hunting": 3,
-        "Gathering": 0,
-        "Strength": 2,
-        "Charm": 2,
-        "Health": 5,
-        "Friendship": 1
-    }
-    #gonna make dicts for the other cats too, for later use
-    
-    pixie_dict = {
-        "Name": "Pixie",
-        "Hunting": 7,
-        "Gathering": 4,
-        "Strength": 7,
-        "Charm": 19,
-        "Health": 15,
-        "Friendship": 1
-    }
-    stellaluna_dict = {
-        "Name": "Stella-Luna",
-        "Hunting": 6,
-        "Gathering": 7,
-        "Strength": 27,
-        "Charm": 7,
-        "Health": 20,
-        "Friendship": 1
-    }
-    elwood_dict = {
-        "Name": "Elwood",
-        "Hunting": 40,
-        "Gathering": 40,
-        "Strength": 40,
-        "Charm": 40,
-        "Health": 30,
-        "Friendship": 1
-    }
-    inventory_dict = {
-        "Herbs": 0,
-        "Food": 0
-    }
+            #then make a dictionary for player and Birch, for easy access
+            player_dict = {
+                "Name": player_name,
+                "Hunting": hunt,
+                "Gathering": herb,
+                "Strength": fight,
+                "Charm": talk,
+                "Health": 5
+            }
+            birch_dict = {
+                "Name": "Birch",
+                "Hunting": 3,
+                "Gathering": 0,
+                "Strength": 2,
+                "Charm": 2,
+                "Health": 5,
+                "Friendship": 1
+            }
+            #gonna make dicts for the other cats too, for later use
+            
+            pixie_dict = {
+                "Name": "Pixie",
+                "Hunting": 7,
+                "Gathering": 4,
+                "Strength": 7,
+                "Charm": 19,
+                "Health": 15,
+                "Friendship": 1
+            }
+            stellaluna_dict = {
+                "Name": "Stella-Luna",
+                "Hunting": 6,
+                "Gathering": 7,
+                "Strength": 27,
+                "Charm": 7,
+                "Health": 20,
+                "Friendship": 1
+            }
+            elwood_dict = {
+                "Name": "Elwood",
+                "Hunting": 40,
+                "Gathering": 40,
+                "Strength": 40,
+                "Charm": 40,
+                "Health": 30,
+                "Friendship": 1
+            }
+            inventory_dict = {
+                "Herbs": 0,
+                "Food": 0
+            }
 
-    companion_list = [birch_dict]
+            companion_list = [birch_dict]
 
-    return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
+            return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
        
+def load_file():
+    #adding all the companion dicts so there's a backup if the player hasn't recruited them yet.
+    marlowe_dict = {
+        "Name": "Marlowe",
+        "Hunting": 6,
+        "Gathering": 11,
+        "Strength": 6,
+        "Charm": 2,
+        "Health": 10,
+        "Friendship": 1
+        }
+    pixie_dict = {
+                "Name": "Pixie",
+                "Hunting": 7,
+                "Gathering": 4,
+                "Strength": 7,
+                "Charm": 19,
+                "Health": 15,
+                "Friendship": 1
+            }
+    stellaluna_dict = {
+                "Name": "Stella-Luna",
+                "Hunting": 6,
+                "Gathering": 7,
+                "Strength": 27,
+                "Charm": 7,
+                "Health": 20,
+                "Friendship": 1
+            }
+    elwood_dict = {
+                "Name": "Elwood",
+                "Hunting": 40,
+                "Gathering": 40,
+                "Strength": 40,
+                "Charm": 40,
+                "Health": 30,
+                "Friendship": 1
+            }
+    inventory_dict = {
+                "Herbs": 0,
+                "Food": 0
+            }
+    while True:
+        player_name = input("To load your file, please enter the exact player name you entered when creating the file. " \
+        "Enter r to return to the game menu.\n")
+        filename = f"{player_name}.csv"
+        try:
+            open (filename, 'r') 
+        except FileNotFoundError:
+            print("Sorry, we couldn't find your file. Make sure you entered your name correctly and that the file is still in the game src folder.\n")
+            filename.close()
+        else:
+            print("File found. Now loading...")
+            companion_list = []
+            with (filename, 'r') as file:
+                reader = csv.reader(filename)
+                for row in reader:
+                    if row[0] == 'Inventory':
+                        herbs = row[1]
+                        food = row[2]
+                        inventory_dict = {
+                        "Herbs": herbs,
+                        "Food": food
+                        }
+                    elif row[0] == player_name:
+                        hunt = row[1]
+                        gather = row[2]
+                        strength = row[3]
+                        charm = row[4]
+                        health = row[5]
+                        player_dict = {
+                        "Name": player_name,
+                        "Hunting": hunt,
+                        "Gathering": gather,
+                        "Strength": strength,
+                        "Charm": charm,
+                        "Health": health
+                        }
+                        #if there's updated info on a companion, the game will overwrite their OG stats with that.
+                    elif row[0] == 'Birch':
+                        hunt = row[1]
+                        gather = row[2]
+                        strength = row[3]
+                        charm = row[4]
+                        health = row[5]
+                        friendship = row[6]
+                        birch_dict = {
+                        "Name": 'Birch',
+                        "Hunting": hunt,
+                        "Gathering": gather,
+                        "Strength": strength,
+                        "Charm": charm,
+                        "Health": health,
+                        "Friendship": friendship
+                        }
+                        companion_list.append(birch_dict)
+                    elif row[0] == 'Marlowe':
+                        hunt = row[1]
+                        gather = row[2]
+                        strength = row[3]
+                        charm = row[4]
+                        health = row[5]
+                        friendship = row[6]
+                        marlowe_dict = {
+                        "Name": 'Marlowe',
+                        "Hunting": hunt,
+                        "Gathering": gather,
+                        "Strength": strength,
+                        "Charm": charm,
+                        "Health": health,
+                        "Friendship": friendship
+                        }
+                        companion_list.append(marlowe_dict)
+                    elif row[0] == 'Pixie':
+                        hunt = row[1]
+                        gather = row[2]
+                        strength = row[3]
+                        charm = row[4]
+                        health = row[5]
+                        friendship = row[6]
+                        pixie_dict = {
+                        "Name": 'Pixie',
+                        "Hunting": hunt,
+                        "Gathering": gather,
+                        "Strength": strength,
+                        "Charm": charm,
+                        "Health": health,
+                        "Friendship": friendship
+                        }
+                        companion_list.append(pixie_dict)
+                    elif row[0] == 'Stellaluna':
+                        hunt = row[1]
+                        gather = row[2]
+                        strength = row[3]
+                        charm = row[4]
+                        health = row[5]
+                        friendship = row[6]
+                        stellaluna_dict = {
+                        "Name": 'Stellaluna',
+                        "Hunting": hunt,
+                        "Gathering": gather,
+                        "Strength": strength,
+                        "Charm": charm,
+                        "Health": health,
+                        "Friendship": friendship
+                        }
+                        companion_list.append(stellaluna_dict)
+                    elif row[0] == 'Elwood':
+                        hunt = row[1]
+                        gather = row[2]
+                        strength = row[3]
+                        charm = row[4]
+                        health = row[5]
+                        friendship = row[6]
+                        elwood_dict = {
+                        "Name": 'Elwood',
+                        "Hunting": hunt,
+                        "Gathering": gather,
+                        "Strength": strength,
+                        "Charm": charm,
+                        "Health": health,
+                        "Friendship": friendship
+                        }
+                        companion_list.append(elwood_dict)
+                return player_name, filename, player_dict, birch_dict, pixie_dict, stellaluna_dict, elwood_dict, companion_list, inventory_dict
+                    
 
 def run_intro(companion_list, inventory_dict):
     #this runs the status report at the beginning of every day.
@@ -179,9 +360,13 @@ def run_camp(companion_list, inventory_dict, player_dict):
             #Food minus one.
             print ("-"*20)
             print("Later that day...\n")
-            inventory_dict["Food"] = (inventory_dict.get("Food") - len(companion_list))
             pick_random_event(companion_list, inventory_dict, player_dict)
             print ("-"*20)
+            if (inventory_dict.get("Food")) >= (len(companion_list)):
+                inventory_dict["Food"] = (inventory_dict.get("Food") - (len(companion_list)*2))
+            else:
+                for cat in companion_list:
+                    cat["Health"] -= 2
             run_intro(companion_list, inventory_dict)
             run_camp(companion_list, inventory_dict, player_dict)
         elif choice == 'debug':
@@ -514,7 +699,7 @@ def talk_to_birch(companion_list, player_dict):
     increase = min((friendship//4), 5)
     player_name = player_dict.get("Name")
     number = random.randrange(1,6)
-    if friendship == 1 or 2:
+    if friendship < 3:
         if number == 1:
             print(f"Birch: 'Oh, hi {player_name}. What do you need?'\n")
             birch_dict["Health"] += increase
@@ -535,7 +720,7 @@ def talk_to_birch(companion_list, player_dict):
             print("Birch: 'Good luck hunting today. I smelled a lot of prey out there earlier.'\n")
             birch_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship == 3 or 4:
+    elif friendship < 5:
         if number == 1:
             print(f"Birch: '{player_name}! How are you?'\n")
             birch_dict["Health"] += increase
@@ -557,7 +742,7 @@ def talk_to_birch(companion_list, player_dict):
             print(f"Birch: '{player_name}! I caught a big rabbit. Want to share it?'\n")
             birch_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship == 5 or 6:
+    elif friendship < 7:
         if number == 1:
             print(f"Birch: 'Oh, {player_name}. It's good to see you.'\n")
             birch_dict["Health"] += increase
@@ -579,7 +764,7 @@ def talk_to_birch(companion_list, player_dict):
             print("Birch: 'What's with the weather these days? Feels like it changes in a blink.'\n")
             birch_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship == 7 or 8:
+    elif friendship < 9:
         if number == 1:
             print(f"Birch: '{player_name}! Good to see you around. How have you been?.'\n")
             birch_dict["Health"] += increase
@@ -631,7 +816,7 @@ def talk_to_marlowe(companion_list, player_dict):
     increase = min((friendship//4), 5)
     player_name = player_dict.get("Name")
     number = random.randrange(1,6)
-    if friendship == 1 or 2:
+    if friendship < 3:
         if number == 1:
             print(f"Marlowe: 'O-oh, hello {player_name}. Did you need anything?'\n")
             marlowe_dict["Health"] += increase
@@ -652,7 +837,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print("Marlowe: 'I-it's a little nerve-wracking being around all these other cats... But I'll try my best...'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship == 3 or 4:
+    elif friendship < 5:
         if number == 1:
             print("'I-I hope you don't mind that I still spend a lot of time at my old home... My garden is over there, "
                   "so I go back to tend to it.'\n")
@@ -674,7 +859,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print("Marlowe: 'H-huh?! O-oh, you just caught me daydreaming. Sorry, I'll pay more attention...'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship == 5 or 6:
+    elif friendship < 7:
         if number == 1:
             print("Marlowe: 'Hehe... My garden looks healthy today. Would you like to come see?'\n")
             marlowe_dict["Health"] += increase
@@ -697,7 +882,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print("Marlowe: 'S-sometimes I get stressed in crowds, but the coven has such a peaceful atmosphere...'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship == 7 or 8:
+    elif friendship < 9:
         if number == 1:
             print("Marlowe: 'My favorite plant? ...I know you'd expect me to say ferns, but it's actually sunflowers. Th-they're " \
             "so pretty, and they even give back to other plants by enriching the soil...'\n")
@@ -743,6 +928,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print(f"Marlowe: 'Oh, {player_name}! I'm practicing my magic. I want to get stronger so I can support everyone better.'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
+    marlowe_dict["Friendship"] += 1
 
 def pick_random_event(companion_list, inventory_dict, player_dict):
     #range max = 1+ the number of items on companion list times ten.
@@ -906,6 +1092,11 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                     False
                     input("Press Enter to continue.\n")
                     return
+            elif choice_rndm9 == '2':
+                print("After a while, the cat wanders back out of your camp.")
+                False
+                input("Press Enter to continue.\n")
+                return
     elif pick_number == 10:
         if len(companion_list) != 1:
             print("It was an uneventful day.\n")
