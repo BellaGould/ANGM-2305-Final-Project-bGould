@@ -729,12 +729,13 @@ def talk_to_companions(companion_list, player_dict):
 
 def talk_to_birch(companion_list, player_dict):
     #talking to companions randomly increases their skills, providing an incentive for paying attention to them.
+    #mb hitting 5 on number could trigger a little chat event? Provide more character interaction?
     birch_dict = companion_list[0]
     friendship = birch_dict.get("Friendship")
-    increase = min((friendship//4), 5)
+    increase = min((friendship//6), 5)
     player_name = player_dict.get("Name")
     number = random.randrange(1,6)
-    if friendship < 3:
+    if friendship < 6:
         if number == 1:
             print(f"Birch: 'Oh, hi {player_name}. What do you need?'\n")
             birch_dict["Health"] += increase
@@ -755,7 +756,7 @@ def talk_to_birch(companion_list, player_dict):
             print("Birch: 'Good luck hunting today. I smelled a lot of prey out there earlier.'\n")
             birch_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship < 5:
+    elif friendship < 12:
         if number == 1:
             print(f"Birch: '{player_name}! How are you?'\n")
             birch_dict["Health"] += increase
@@ -777,7 +778,7 @@ def talk_to_birch(companion_list, player_dict):
             print(f"Birch: '{player_name}! I caught a big rabbit. Want to share it?'\n")
             birch_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship < 7:
+    elif friendship < 18:
         if number == 1:
             print(f"Birch: 'Oh, {player_name}. It's good to see you.'\n")
             birch_dict["Health"] += increase
@@ -799,7 +800,7 @@ def talk_to_birch(companion_list, player_dict):
             print("Birch: 'What's with the weather these days? Feels like it changes in a blink.'\n")
             birch_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship < 9:
+    elif friendship < 24:
         if number == 1:
             print(f"Birch: '{player_name}! Good to see you around. How have you been?.'\n")
             birch_dict["Health"] += increase
@@ -821,7 +822,7 @@ def talk_to_birch(companion_list, player_dict):
             print(f"Birch: 'Hey {player_name}, I know you're busy. Can I help take anything off your plate?'\n")
             birch_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship >= 9:
+    elif friendship >= 30:
         if number == 1:
             print("Birch: 'How lucky is it that we bumped into each other when we did? I used to be a solo cat, but I can't "
                   "imagine life without you and the coven.'\n")
@@ -851,7 +852,7 @@ def talk_to_marlowe(companion_list, player_dict):
     increase = min((friendship//4), 5)
     player_name = player_dict.get("Name")
     number = random.randrange(1,6)
-    if friendship < 3:
+    if friendship < 6:
         if number == 1:
             print(f"Marlowe: 'O-oh, hello {player_name}. Did you need anything?'\n")
             marlowe_dict["Health"] += increase
@@ -872,7 +873,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print("Marlowe: 'I-it's a little nerve-wracking being around all these other cats... But I'll try my best...'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship < 5:
+    elif friendship < 12:
         if number == 1:
             print("'I-I hope you don't mind that I still spend a lot of time at my old home... My garden is over there, "
                   "so I go back to tend to it.'\n")
@@ -894,7 +895,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print("Marlowe: 'H-huh?! O-oh, you just caught me daydreaming. Sorry, I'll pay more attention...'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship < 7:
+    elif friendship < 18:
         if number == 1:
             print("Marlowe: 'Hehe... My garden looks healthy today. Would you like to come see?'\n")
             marlowe_dict["Health"] += increase
@@ -917,7 +918,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print("Marlowe: 'S-sometimes I get stressed in crowds, but the coven has such a peaceful atmosphere...'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship < 9:
+    elif friendship < 24:
         if number == 1:
             print("Marlowe: 'My favorite plant? ...I know you'd expect me to say ferns, but it's actually sunflowers. Th-they're " \
             "so pretty, and they even give back to other plants by enriching the soil...'\n")
@@ -940,7 +941,7 @@ def talk_to_marlowe(companion_list, player_dict):
             print("Marlowe: 'Another beautiful day in the forest. W-would you like to take a walk in my garden together?'\n")
             marlowe_dict["Strength"] += increase
             input("Press Enter to continue.\n")
-    elif friendship >= 9:
+    elif friendship >= 30:
         if number == 1:
             print("Marlowe: 'Here, th-this is for you... Uh, n-no, it doesn't have any magic properties. It's just a zinnia. D-do " \
             "you know flower language, by any chance?'\n")
@@ -971,31 +972,31 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
     #range max = 1+ the number of items on companion list times ten.
     #how to divide each 10 events added for each companion?
     #1-4 are random food, herb, or health hits/gain with no input.
-    #5-7 are companion chat events. 2 dialogue options with minor effects.
+    #5-9 are companion chat events. 2 dialogue options with minor effects.
     #all of the above are pretty simple, so they can be 'in house' without their own functions.
-    #8-9 are skill check events with rewards/punishments for pass/failure.
-    #10 is the recruitment event, which has a skill check (or multiple).
+    #10-14 are skill check events with rewards/punishments for pass/failure.
+    #15 is the recruitment event, which has a skill check (or multiple).
     player_name = player_dict.get("Name")
     birch_dict = companion_list[0]
     range_max = 1 + (len(companion_list)*10)
     pick_number = random.randrange(0, range_max)
-    if pick_number == 1:
+    if pick_number == 1: #food down
         print("Your coven was very active today... and very hungry! Your food storage is looking a bit lean...\n")
         inventory_dict["Food"] = (inventory_dict.get("Food") - len(companion_list))
         input("Press Enter to continue.\n")
-    elif pick_number == 2:
+    elif pick_number == 2: #food up
         print("Prey was abundant today! You gained some extra food for your stockpile.\n")
         inventory_dict["Food"] = (inventory_dict.get("Food") + (len(companion_list)*2))
         input("Press Enter to continue.\n")
-    elif pick_number == 3:
+    elif pick_number == 3: #herbs down
         print("You found some pesky bugs munching on your collected herbs! Unfortunately, you lost a few...\n")
         inventory_dict["Herbs"] = (inventory_dict.get("Herbs") - 2)
         input("Press Enter to continue.\n")
-    elif pick_number == 4:
+    elif pick_number == 4: #herbs up
         print("You found a patch of herbs sprouting near your camp! You picked a few and dried them.\n")
         inventory_dict["Herbs"] = (inventory_dict.get("Herbs") + 4)
         input("Press Enter to continue.\n")
-    elif pick_number == 5:
+    elif pick_number == 5: #Birch hurt, choose +health or +food
         print("You find Birch bringing back a freshly-caught mouse. They nod in greeting.\n")
         print(f"Birch: 'Hi, {player_name}! There's been good hunting today. Trying to make the most of it.'\n")
         print("They drop the mouse on the food pile. As they move past you, you notice some new scratches on their flank.")
@@ -1023,7 +1024,7 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                 False
                 input("Press Enter to continue.\n")
                 return
-    elif pick_number == 6:
+    elif pick_number == 6: #Birch bad at magic, choose +birchHunt or +birchGather
         print("You walk outside your den to find Birch waiting for you. They seem troubled by something.\n")
         print(f"Birch: '{player_name}... I've been thinking. The purpose of a coven is for witch-cats to support each other by pooling their magic, right?'\n")
         print("Birch: 'But I'm, uh, not exactly the strongest witch. Survival and exploration are fine,"
@@ -1061,9 +1062,40 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                 False
                 input("Press Enter to continue.\n")
                 return
-    elif pick_number == 7:
-         fox_fight(birch_dict, player_dict, player_name)
-    elif pick_number == 8:
+    elif pick_number == 7: # +birchCharm or +birchStrength
+        print("It's an ordinary day, and you're walking around camp when you catch the scent of an unfamilliar cat." \
+        "There is a stranger by your camp enterance. They incline their head towards you.\n")
+        print("Stranger: 'Greetings, fellows. I hope you'll forgive my intrusion. It's rare to see fellow cat-witches in these parts.'\n")
+        print("Birch: 'Yeah, we just set up here. Do you need something?'\n")
+        print("The stranger nods.\n")
+        print("Stranger: 'Incidentally, yes. I've been on a pilgrimage for several months, and haven't had many opportunities to " \
+        "use my abilities. Would you indulge me in a quick sparring match?'\n")
+        while True:
+            print("Birch looks to you for guidance. Do you want to (1.) spar with the stranger or (2.) convince them to do something else?\n")
+            choice_rndm7 = input("Please type the number of your choice.\n")
+            if choice_rndm7 == '1':
+                print("You set down the terms for a friendly sparring match and take turns with Birch. " \
+                "It's rather exhilirating, and the stranger seems pleased.\n")
+                print("Stranger: 'Many thanks. I wish you well on your own journey.'\n")
+                input("Birch has gained 2 Strength!\n")
+                birch_dict["Strength"] = (birch_dict.get("Strength") + 2)
+                False
+                return
+            elif choice_rndm7 == '2':
+                print("The stranger seems disappointed, but you convince them to stay for a while and chat. They're a well-traveled cat." \
+                "You and Birch learn lots from their stories!\n")
+                input("Birch has gained 2 Charm!\n")
+                birch_dict["Charm"] = (birch_dict.get("Charm") + 2)
+                False
+                return
+    
+    elif pick_number == 8: 
+       
+    elif pick_number == 9:
+        
+    elif pick_number == 10: #fox fight, choose skillcheck Strength (+food or -health) or retreat
+        fox_fight(birch_dict, player_dict, player_name)
+    elif pick_number == 11: #mushrooms, choose skillcheck Gather (+food+herbs or -health) or nothing
         print("It's been rather rainy the last few days, and the ground is wet and squishy. One morning, you step out of your den to find " \
         "the ground covered in mushrooms of all shapes and sizes! Birch looks a little grossed out.\n")
         print(f"Birch: 'Ugh, they're everywhere... Careful, {player_name}. Some send out spores if you bump them.'\n")
@@ -1074,10 +1106,10 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
         while True:
             print("Indeed, some mushrooms are safe, edible, and even have magic properties. But other types can be hallucinogenic " \
             "at best, dangerous at worst. Should you (1.) get rid of all the mushrooms or (2.) try to separate the good and bad ones?\n")
-            choice_rndm8 = input("Please type the number of your choice.\n")
-            if choice_rndm8 == '1':
+            choice_rndm11 = input("Please type the number of your choice.\n")
+            if choice_rndm11 == '1':
                 print("You spend the day clearing out the mushrooms. Camp looks a lot cleaner now!\n")
-            elif choice_rndm8 == '2':
+            elif choice_rndm11 == '2':
                 if player_dict.get("Gathering") + birch_dict.get("Gathering") >= 5:
                     print("You spot a couple of edible mushrooms among the group. No need to waste those! " \
                     "Using your knowledge of Gathering, you guide Birch on which ones to pick and which to avoid.\n")
@@ -1096,7 +1128,7 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                     False
                     input("Press Enter to continue.\n")
                     return
-    elif pick_number == 9:
+    elif pick_number == 12: #lost kittypet, choose skillcheck Charm (+friendship or -health) or nothing.
         print("A strange cat wanders into your camp, muttering to themself. They reek of asphalt and kibble - a housecat, " \
         "maybe? But what are they doing all the way out here?\n")
         print("Stranger: 'I'm not lost... I'm not lost, haha. I'll find home any minute now...'\n")
@@ -1107,8 +1139,8 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
         input("Press Enter to continue.\n")
         while True:
             print("They're clearly scared of you. Should you (1.) try to calm them down, or (2.) just leave them be?\n")
-            choice_rndm9 = input("Please type the number of your choice.\n")
-            if choice_rndm9 == '1':
+            choice_rndm12 = input("Please type the number of your choice.\n")
+            if choice_rndm12 == '1':
                 if player_dict.get("Charm") + birch_dict.get("Charm") >= 5:
                     print("With some gentle coaxing, you and Birch talk down the frightened cat and bring them some food. " \
                     "As you suspect, they're a lost housecat who went into the forest on a whim and hasn't been able to " \
@@ -1129,18 +1161,21 @@ def pick_random_event(companion_list, inventory_dict, player_dict):
                     False
                     input("Press Enter to continue.\n")
                     return
-            elif choice_rndm9 == '2':
+            elif choice_rndm12 == '2':
                 print("After a while, the cat wanders back out of your camp.")
                 False
                 input("Press Enter to continue.\n")
                 return
-    elif pick_number == 10:
+    elif pick_number == 13: #incomplete. Should test Hunt.
+    elif pick_number == 14: #incomplete. Should test multiple? Hunt+Gather?
+    elif pick_number == 15: #Marlowe recruit (skillcheck Gather, +Marlowe or nothing) or empty event
         if len(companion_list) != 1:
             print("It was an uneventful day.\n")
             input("Press Enter to continue.\n")
         else:
             recruit_marlowe(companion_list, inventory_dict, player_dict)
-    else:
+    elif pick_number ==
+    else: #fallback empty event.
         print("It was an uneventful day.\n")
         input("Press Enter to continue.\n")
 #pick_random_event looks at the length of the companion list to determine what 'level' the player is at, and what events are appropriate
@@ -1156,8 +1191,8 @@ def fox_fight(birch_dict, player_dict, player_name):
     print(f"Birch: '{player_name}! Help me fight this thing off!'\n")
     while True:
         print("It's two versus one, but foxes are vicious foes. Do you (1.) fight it or (2.) retreat?")
-        choice_rndm7 = input("Please type the number of your choice.")
-        if choice_rndm7 == '1':
+        choice_rndm10 = input("Please type the number of your choice.")
+        if choice_rndm10 == '1':
             print("Flank-to-flank with Birch, you prepare to face the fox!\n")
             combined_fight = birch_dict.get("Strength") + player_dict.get("Strength")
             if combined_fight >= 5:
@@ -1169,7 +1204,7 @@ def fox_fight(birch_dict, player_dict, player_name):
             print("You recovered the prey, gaining 2 Food!")
             False
             return
-        elif choice_rndm7 == '2':
+        elif choice_rndm10 == '2':
             print("You call for Birch to retreat. They hesitate, looking longingly at the prey pile, but follow your lead.\n")
             print("Foxes can easily injure a cat. You shouldn't fight them unless you're confident in your Strength.\n")
             False
