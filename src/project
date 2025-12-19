@@ -409,10 +409,9 @@ def send_exploring(companion_list, inventory_dict):
         print ("-"*20)
         explore_companion = input("Type the name of the cat you want to send, or type r to return. ")
         if explore_companion in exploring_list:
-            food_gained, herb_gained = calculate_explore(explore_companion, companion_list)
-            print(f"{explore_companion} obtained {food_gained} food and {herb_gained} herbs!\n")
-            inventory_dict["Food"] = (inventory_dict.get("Food") + food_gained)
-            inventory_dict["Herbs"] = (inventory_dict.get("Herbs") + herb_gained)
+            #so I want to separate this so that when you send a cat exploring, it picks randomly whether they hunt OR gather
+            item_gained, message = calculate_explore(explore_companion, companion_list, inventory_dict)
+            print(message)
             exploring = False
             return True
         elif explore_companion == "r":
@@ -423,7 +422,7 @@ def send_exploring(companion_list, inventory_dict):
 #send_exploring gathers a list of available companions, lets the player choose one to send out, then calculates the results with calculate_explore.
 #it then applies the results to the inventory_dict and returns to run_camp.
 
-def calculate_explore(explore_companion, companion_list):
+def calculate_explore(explore_companion, companion_list, inventory_dict):
     if explore_companion == 'Birch':
         explore_dict = companion_list[0]
     elif explore_companion == 'Marlowe':
@@ -432,37 +431,49 @@ def calculate_explore(explore_companion, companion_list):
     companion_gather = explore_dict.get("Gathering")
     explore_dict["Health"] = (explore_dict.get("Health") - 1)
 
-    hunt_rng = random.randrange(0, 31)
-    hunt_num = min(hunt_rng+companion_hunt, 60)
-    if 0 <= hunt_num <= 10:
-        food_caught = 1
-    elif 11<= hunt_num <= 20:
-        food_caught = 2
-    elif 21<= hunt_num <= 30:
-        food_caught = 4
-    elif 31<= hunt_num <= 40:
-        food_caught = 6
-    elif 41<= hunt_num <= 50:
-        food_caught = 9
-    elif 51<= hunt_num <= 60:
-        food_caught = 12
+    #so I could use random.choice to pick 1 or 2, then determine hunting. But what if I want to determine by stats?
+    #explore_chance = companion_hunt+companion_gather+1 - this is the total range.
+    #explore_chance_num = random.randrange(explore_chance)
+    #lower_stat = min([companion_hunt, companion_gather])
+    #if explore_chance_num > companion_hunt:
 
-    herb_rng = random.randrange(0, 31)
-    herb_num = min(herb_rng+companion_gather, 60)
-    if 0 <= herb_num <= 10:
-        herb_gathered = 1
-    elif 11<= herb_num <= 20:
-        herb_gathered = 2
-    elif 21<= herb_num <= 30:
-        herb_gathered = 4
-    elif 31<= herb_num <= 40:
-        herb_gathered = 6
-    elif 41<= herb_num <= 50:
-        herb_gathered = 9
-    elif 51<= herb_num <= 60:
-        herb_gathered = 12
+    choice = random.choice([1,2])
+    if choice == 1:
+        hunt_rng = random.randrange(0, 31)
+        hunt_num = min(hunt_rng+companion_hunt, 60)
+        if 0 <= hunt_num <= 10:
+            item_gained = 1
+        elif 11<= hunt_num <= 20:
+            item_gained = 2
+        elif 21<= hunt_num <= 30:
+            item_gained = 4
+        elif 31<= hunt_num <= 40:
+            item_gained = 6
+        elif 41<= hunt_num <= 50:
+            item_gained = 9
+        elif 51<= hunt_num <= 60:
+            item_gained = 12
+        inventory_dict["Food"] = (inventory_dict.get("Food") + item_gained)
+        message = f"{explore_companion} caught {item_gained} food!"
+    else:
+        herb_rng = random.randrange(0, 31)
+        herb_num = min(herb_rng+companion_gather, 60)
+        if 0 <= herb_num <= 10:
+            item_gained = 1
+        elif 11<= herb_num <= 20:
+            item_gained = 2
+        elif 21<= herb_num <= 30:
+            item_gained = 4
+        elif 31<= herb_num <= 40:
+            item_gained = 6
+        elif 41<= herb_num <= 50:
+            item_gained = 9
+        elif 51<= herb_num <= 60:
+            item_gained = 12
+        inventory_dict["Herbs"] = (inventory_dict.get("Herbs") + item_gained)
+        message = f"{explore_companion} gathered {item_gained} herbs! \n"
     
-    return food_caught, herb_gathered
+    return item_gained, message
 #calculate explore calculates how much food or herbs a companion has gained. It combines RNG with the companion's stats and returns to send_exploring.
 
 def cast_spell(companion_list, inventory_dict):
